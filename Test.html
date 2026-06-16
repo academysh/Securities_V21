@@ -1,0 +1,800 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=5">
+<title>Securities & Markets — Practice Test</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --navy:#1E2761;--navy-l:#CADCFC;
+  --teal:#028090;--teal-l:#D6F0F3;--teal-d:#015E6A;--teal-m:#1D9E75;
+  --coral:#993C1D;--coral-l:#FAECE7;--coral-m:#D85A30;
+  --green-l:#E1F5EE;--green:#085041;
+  --amber:#B07D12;--amber-l:#FEF3C7;
+  --violet:#6D28D9;--violet-l:#EDE9FE;--violet-d:#4C1D95;--violet-m:#7C3AED;
+  --gray:#64748B;--gray-l:#F1F5F9;--gray-m:#CBD5E1;--gray-d:#334155;
+  --bg:#F0F4F8;--card:#fff;--text:#1e293b;--text2:#475569;--text3:#94a3b8;
+  --radius:12px;--shadow:0 2px 10px rgba(0,0,0,.09)
+}
+body{font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display",system-ui,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;-webkit-text-size-adjust:100%}
+
+/* HEADER */
+.app-header{background:linear-gradient(135deg,var(--navy) 0%,#1a5276 40%,var(--teal) 80%,#2E7D32 100%);padding:.75rem 1.2rem;padding-top:max(.75rem,env(safe-area-inset-top));position:sticky;top:0;z-index:100;box-shadow:0 2px 14px rgba(0,0,0,.22)}
+.header-top{display:flex;align-items:center;justify-content:space-between;gap:.6rem;flex-wrap:wrap}
+.app-title{color:#fff;font-size:.98rem;font-weight:700;line-height:1.3}
+.app-sub{color:var(--navy-l);font-size:.65rem;margin-top:.1rem}
+.header-btns{display:flex;gap:.3rem;flex-shrink:0;flex-wrap:wrap}
+.hdr-btn{border-radius:7px;padding:.28rem .7rem;font-size:.7rem;font-weight:600;cursor:pointer;transition:background .2s;border:1.5px solid}
+.reset-btn{background:rgba(255,255,255,.17);border-color:rgba(255,255,255,.4);color:#fff}
+.reset-btn:hover{background:rgba(255,255,255,.3)}
+.wrong-btn{background:rgba(124,58,237,.35);border-color:rgba(167,139,250,.6);color:#DDD6FE}
+.wrong-btn:hover{background:rgba(124,58,237,.55)}
+.wrong-btn.active-mode{background:rgba(124,58,237,.8);border-color:#A78BFA;color:#fff}
+
+/* TEST TABS */
+.test-tabs{display:flex;align-items:center;justify-content:center;gap:.45rem;padding:.6rem 1.2rem;background:linear-gradient(135deg,#0f2027 0%,#203a43 45%,#2c5364 100%);border-top:1px solid rgba(255,255,255,.12);flex-wrap:wrap}
+.test-tabs-label{font-size:.6rem;font-weight:800;color:rgba(255,255,255,.55);text-transform:uppercase;letter-spacing:.1em;margin-right:.1rem;white-space:nowrap;text-shadow:0 1px 3px rgba(0,0,0,.4)}
+.test-tab{padding:.3rem .9rem;border-radius:20px;font-size:.72rem;font-weight:700;cursor:pointer;border:1.5px solid rgba(255,255,255,.25);color:rgba(255,255,255,.7);background:rgba(255,255,255,.1);transition:all .2s;white-space:nowrap;line-height:1.3;text-shadow:0 1px 2px rgba(0,0,0,.3)}
+.test-tab:hover:not(.active){background:rgba(255,255,255,.18);color:#fff;border-color:rgba(255,255,255,.5)}
+.test-tab.t1-tab.active{background:linear-gradient(135deg,#6366f1,#8b5cf6);color:#fff;border-color:transparent;box-shadow:0 2px 10px rgba(99,102,241,.5)}
+.test-tab.t2-tab.active{background:linear-gradient(135deg,#0891b2,#06b6d4);color:#fff;border-color:transparent;box-shadow:0 2px 10px rgba(8,145,178,.5)}
+.test-tab.all-tab.active{background:linear-gradient(135deg,#059669,#10b981);color:#fff;border-color:transparent;box-shadow:0 2px 10px rgba(5,150,105,.5)}
+.test-tab-count{font-size:.6rem;opacity:.75;font-weight:600;margin-left:.2rem}
+
+/* TIMER */
+.timer-bar{background:linear-gradient(135deg,#1a1a2e 0%,#16213e 40%,#0f3460 70%,#533483 100%);padding:.55rem 1.2rem;display:flex;align-items:center;justify-content:center;gap:.75rem;flex-wrap:wrap;border-top:1px solid rgba(255,255,255,.12);border-bottom:1px solid rgba(0,0,0,.25)}
+.timer-inner{display:flex;align-items:center;gap:.65rem;flex-wrap:wrap;justify-content:center}
+.timer-label{font-size:.6rem;color:rgba(255,255,255,.7);font-weight:800;text-transform:uppercase;letter-spacing:.1em;white-space:nowrap;text-shadow:0 1px 4px rgba(0,0,0,.5)}
+.timer-display{font-size:1.25rem;font-weight:800;font-variant-numeric:tabular-nums;letter-spacing:.06em;padding:.28rem .85rem;border-radius:10px;transition:background .5s,color .5s,box-shadow .5s;min-width:96px;text-align:center}
+.timer-green{background:linear-gradient(135deg,#d1fae5,#a7f3d0);color:#064e3b;box-shadow:0 2px 12px rgba(16,185,129,.3)}
+.timer-yellow{background:linear-gradient(135deg,#fef3c7,#fde68a);color:#78350f;box-shadow:0 2px 12px rgba(245,158,11,.35)}
+.timer-red{background:linear-gradient(135deg,#fee2e2,#fecaca);color:#7f1d1d;box-shadow:0 2px 12px rgba(239,68,68,.4);animation:pulse 1s infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.85;transform:scale(1.02)}}
+.timer-btns{display:flex;gap:.28rem}
+.t-btn{border:none;border-radius:7px;padding:.28rem .6rem;font-size:.68rem;font-weight:700;cursor:pointer;transition:all .15s;white-space:nowrap}
+.t-start{background:linear-gradient(135deg,#d1fae5,#6ee7b7);color:#064e3b;border:1px solid #a7f3d0}.t-start:hover{background:linear-gradient(135deg,#6ee7b7,#34d399);box-shadow:0 2px 8px rgba(16,185,129,.4)}
+.t-pause{background:linear-gradient(135deg,#fef3c7,#fde68a);color:#78350f;border:1px solid #fcd34d}.t-pause:hover{background:linear-gradient(135deg,#fde68a,#fbbf24);box-shadow:0 2px 8px rgba(245,158,11,.4)}
+.t-stop{background:linear-gradient(135deg,#fee2e2,#fca5a5);color:#7f1d1d;border:1px solid #fca5a5}.t-stop:hover{background:linear-gradient(135deg,#fca5a5,#f87171);box-shadow:0 2px 8px rgba(239,68,68,.4)}
+.t-reset{background:rgba(255,255,255,.12);color:rgba(255,255,255,.8);border:1px solid rgba(255,255,255,.2)}.t-reset:hover{background:rgba(255,255,255,.22);color:#fff}
+
+/* SCREEN */
+.screen{padding:1rem 1.2rem;max-width:840px;margin:0 auto}
+
+/* SCORE BAR */
+.score-bar{display:flex;align-items:center;gap:.6rem;background:var(--card);border-radius:var(--radius);padding:.55rem .9rem;margin-bottom:.75rem;box-shadow:var(--shadow);border:1px solid var(--gray-m)}
+.sc{display:flex;align-items:baseline;gap:.18rem}
+.sc .n{font-size:1.15rem;font-weight:800;color:var(--navy)}
+.sc .d{font-size:.72rem;color:var(--text3)}
+.sc-sep{color:var(--gray-m)}
+.sc-pct{font-size:.78rem;font-weight:700;padding:.15rem .5rem;border-radius:7px}
+.sc-pct.good{background:#d1fae5;color:#065f46}
+.sc-pct.mid{background:var(--amber-l);color:var(--amber)}
+.sc-pct.low{background:#fee2e2;color:#991b1b}
+.sc-bar-wrap{flex:1;height:7px;background:var(--gray-m);border-radius:10px;overflow:hidden}
+.sc-bar-fill{height:100%;border-radius:10px;transition:width .5s;background:linear-gradient(90deg,var(--teal-m),var(--teal-d))}
+
+/* WRONG BANK PANEL */
+.wrong-bank-panel{background:linear-gradient(135deg,#F5F3FF,var(--violet-l));border:1.5px solid #C4B5FD;border-radius:var(--radius);padding:.7rem .9rem;margin-bottom:.8rem}
+.wbp-hdr{display:flex;align-items:center;gap:.4rem;margin-bottom:.3rem}
+.wbp-title{font-size:.8rem;font-weight:700;color:var(--violet-d)}
+.wbp-count{margin-left:auto;font-size:.68rem;font-weight:700;background:var(--violet-m);color:#fff;padding:.1rem .4rem;border-radius:10px}
+.wbp-note{font-size:.67rem;color:var(--violet-d);opacity:.85;margin-bottom:.35rem}
+.wbp-btns{display:flex;gap:.4rem}
+.wbp-drill{font-size:.7rem;background:var(--violet-m);border:none;color:#fff;border-radius:6px;padding:.22rem .6rem;cursor:pointer;font-weight:600}
+.wbp-drill:hover{background:var(--violet-d)}
+.wbp-clear{font-size:.7rem;background:none;border:1px solid #C4B5FD;color:var(--violet-d);border-radius:6px;padding:.22rem .55rem;cursor:pointer;font-weight:600}
+.wbp-clear:hover{background:var(--violet-l)}
+
+/* MODE BADGE */
+.round-info{display:flex;align-items:center;flex-wrap:wrap;gap:.4rem;margin-bottom:.75rem}
+.round-pill{display:inline-flex;align-items:center;gap:.28rem;background:var(--navy);color:var(--navy-l);border-radius:7px;padding:.22rem .65rem;font-size:.66rem;font-weight:600}
+.wrong-pill{background:linear-gradient(90deg,var(--violet-d),var(--violet-m));color:#fff}
+.progress-pill{display:inline-flex;align-items:center;gap:.28rem;background:var(--card);border:1.5px solid var(--gray-m);border-radius:7px;padding:.22rem .65rem;font-size:.66rem;font-weight:600;color:var(--text2);box-shadow:var(--shadow)}
+.progress-pill .prog-nums{font-weight:700;color:var(--navy)}
+
+/* TRACKER */
+.tracker{display:flex;gap:3px;margin-bottom:.85rem;flex-wrap:wrap}
+.tracker-dot{width:13px;height:13px;border-radius:50%;cursor:pointer;transition:transform .13s;border:1.5px solid transparent;flex-shrink:0}
+.tracker-dot:hover{transform:scale(1.25)}
+.dot-unseen{background:var(--gray-m);border-color:var(--gray)}
+.dot-correct{background:#059669;border-color:#047857}
+.dot-wrong{background:#dc2626;border-color:#b91c1c}
+.dot-active{border-color:var(--navy)!important;box-shadow:0 0 0 2px var(--navy-l)}
+
+/* QUESTION CARD */
+.q-card{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:1.1rem 1.2rem;margin-bottom:.75rem;border:1px solid var(--gray-m)}
+.q-label{font-size:.63rem;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.08em;margin-bottom:.4rem}
+.q-text{font-size:.92rem;font-weight:600;line-height:1.55;margin-bottom:.85rem;color:var(--text)}
+.opts{display:flex;flex-direction:column;gap:.45rem}
+.opt{display:flex;align-items:flex-start;gap:.7rem;padding:.58rem .78rem;border-radius:9px;border:1.5px solid var(--gray-m);cursor:pointer;background:var(--gray-l)}
+.opt:hover:not(.ok):not(.bad):not(.disabled){background:var(--teal-l);border-color:var(--teal)}
+.opt.ok{background:#d1fae5!important;border:2px solid #059669!important;cursor:default}
+.opt.bad{background:#fee2e2!important;border:2px solid #dc2626!important;cursor:default}
+.opt.disabled{cursor:default;opacity:.45}
+.opt-l{font-size:.72rem;font-weight:700;min-width:22px;height:22px;border-radius:50%;background:#e2e8f0;display:flex;align-items:center;justify-content:center;color:var(--gray);margin-top:1px;flex-shrink:0}
+.opt.ok .opt-l{background:#059669;color:#fff}
+.opt.bad .opt-l{background:#dc2626;color:#fff}
+.opt-text{font-size:.83rem;line-height:1.5;color:var(--text2)}
+.opt.ok .opt-text{color:#065f46;font-weight:600}
+.opt.bad .opt-text{color:#991b1b;font-weight:600}
+
+/* EXPLANATION */
+.exp-box{margin-top:.72rem;padding:.62rem .92rem;border-radius:9px;font-size:.79rem;line-height:1.65;display:none}
+.exp-box.show{display:block}
+.exp-ok{background:#d1fae5;border-left:3px solid #059669;color:#065f46}
+.exp-bad{background:#fee2e2;border-left:3px solid #dc2626;color:#991b1b}
+
+/* NAV */
+.nav-row{display:flex;gap:.5rem;justify-content:center;margin-top:.5rem;flex-wrap:wrap}
+.btn{padding:.46rem 1.05rem;border:none;border-radius:8px;cursor:pointer;font-size:.8rem;font-weight:600;transition:all .2s}
+.btn-p{background:var(--teal);color:#fff}.btn-p:hover{background:var(--teal-d)}
+.btn-sec{background:var(--card);color:var(--text2);border:1.5px solid var(--gray-m)}.btn-sec:hover{background:var(--gray-l)}
+.btn-wrong{background:var(--violet-m);color:#fff}.btn-wrong:hover{background:var(--violet-d)}
+
+/* RESULT */
+.result-card{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:1.6rem 1.3rem;text-align:center}
+.result-big{font-size:2.8rem;font-weight:800;margin:.25rem 0}
+.result-grade{display:inline-block;padding:.28rem .9rem;border-radius:18px;font-size:.84rem;font-weight:700;margin:.35rem 0 .6rem}
+.result-bar-wrap{background:var(--gray-m);border-radius:18px;height:11px;overflow:hidden;margin:.6rem auto;max-width:260px}
+.result-bar-fill{height:100%;border-radius:18px;transition:width .8s}
+.result-breakdown{display:flex;gap:.4rem;justify-content:center;flex-wrap:wrap;margin:.75rem 0 .9rem}
+.rp{padding:.22rem .72rem;border-radius:18px;font-size:.72rem;font-weight:600}
+
+/* EMPTY */
+.empty-state{text-align:center;padding:2.5rem 1.5rem;color:var(--text3)}
+.save-toast{position:fixed;bottom:1.2rem;right:1.2rem;background:linear-gradient(135deg,#059669,#047857);color:#fff;padding:.45rem .9rem;border-radius:20px;font-size:.72rem;font-weight:700;box-shadow:0 4px 16px rgba(5,150,105,.4);opacity:0;transform:translateY(8px);transition:opacity .3s,transform .3s;pointer-events:none;z-index:999}
+.save-toast.show{opacity:1;transform:translateY(0)}
+.empty-icon{font-size:2.5rem;margin-bottom:.6rem}
+.empty-title{font-size:.92rem;font-weight:600;color:var(--text2);margin-bottom:.35rem}
+.empty-sub{font-size:.76rem;line-height:1.55}
+
+@media(max-width:600px){
+  .app-title{font-size:.88rem}
+  .app-sub{font-size:.6rem}
+  .test-tabs{gap:.3rem;padding:.5rem .85rem}
+  .test-tab{padding:.25rem .6rem;font-size:.66rem}
+  .test-tab-count{display:none}
+  .timer-bar{padding:.4rem .85rem}
+  .timer-display{font-size:1rem;min-width:78px;padding:.2rem .6rem}
+  .t-btn{padding:.2rem .42rem;font-size:.63rem}
+  .timer-label{display:none}
+  .screen{padding:.75rem .85rem}
+  .sc .n{font-size:1rem}
+  .q-card{padding:.85rem .9rem}
+  .q-text{font-size:.86rem}
+  .opt-text{font-size:.78rem}
+  .opt{padding:.48rem .6rem;gap:.5rem}
+  .result-big{font-size:2rem}
+  .result-card{padding:1.2rem .9rem}
+  .round-info{gap:.3rem}
+  .progress-pill,.round-pill{font-size:.6rem;padding:.18rem .5rem}
+}
+@media(max-width:380px){
+  .test-tab{padding:.22rem .48rem;font-size:.62rem}
+  .timer-btns{gap:.2rem}
+  .t-btn{padding:.18rem .35rem;font-size:.6rem}
+}
+</style>
+</head>
+<body>
+
+<div class="app-header">
+  <div class="header-top">
+    <div>
+      <div class="app-title">Securities &amp; Markets — Practice Test</div>
+      <div class="app-sub">50 questions · Q1–Q2 syllabus · wrong-answer drill</div>
+    </div>
+    <div class="header-btns">
+      <button class="hdr-btn reset-btn" onclick="clearSave();startOver()">&#8634; New Round</button>
+      <button class="hdr-btn wrong-btn" id="wrong-mode-btn" onclick="toggleWrongMode()">&#128293; Wrong Answers</button>
+    </div>
+  </div>
+</div>
+
+<!-- TEST SELECTOR -->
+<div class="test-tabs">
+  <span class="test-tabs-label">Select Test</span>
+  <button class="test-tab t1-tab active" id="tab-t1" onclick="switchTest('t1')">📝 Test 1<span class="test-tab-count">50 Qs</span></button>
+  <button class="test-tab t2-tab" id="tab-t2" onclick="switchTest('t2')">📋 Test 2<span class="test-tab-count">100 Qs</span></button>
+  <button class="test-tab all-tab" id="tab-all" onclick="switchTest('all')">⚡ All Tests<span class="test-tab-count">150 Qs</span></button>
+</div>
+
+<!-- TIMER -->
+<div class="timer-bar">
+  <div class="timer-inner">
+    <span class="timer-label">⏱ Exam Timer</span>
+    <div class="timer-display timer-green" id="timer-display">90:00</div>
+    <div class="timer-btns">
+      <button class="t-btn t-start" onclick="timerStart()">▶ Start</button>
+      <button class="t-btn t-pause" onclick="timerPause()">⏸ Pause</button>
+      <button class="t-btn t-stop" onclick="timerStop()">⏹ Stop</button>
+      <button class="t-btn t-reset" onclick="timerReset()">↺ Reset</button>
+    </div>
+  </div>
+</div>
+
+<div class="screen">
+  <div id="app-content"></div>
+</div>
+
+<script>
+/* ── QUESTION BANK ──────────────────────────────── */
+const QS = [
+  {id:"Q01",q:"A prime broker would typically be associated with which type of investment fund?",opts:["Commodities fund","Exchange-traded fund","Hedge fund","Mutual fund"],ans:2,exp:"A hedge fund may utilise the services of a prime broker who will provide credit facilities to enable leverage, act as OTC counterparty or intermediary, and provide clearing, settlement, and fund administration services."},
+  {id:"Q02",q:"Asset-backed commercial paper (CP) investments typically mature between 90 and 180 days. What is the MAXIMUM maturity of such investments in Europe?",opts:["270 days","Up to one year (365 days)","18 months","Up to two years"],ans:1,exp:"Asset-backed commercial paper is a short-term investment vehicle. In the US, the maximum term is generally 270 days. In Europe, it can have a maturity of up to one year (365 days)."},
+  {id:"Q03",q:"Which one of the following assets is most likely to be categorised as an intangible asset?",opts:["Land","Long-term investments","Patents","Inventories"],ans:2,exp:"Intangible assets are those without physical substance, such as patents, trademarks and goodwill. Land, investments and inventories all have physical or measurable financial substance."},
+  {id:"Q04",q:"Shares listed by a company which does NOT maintain a share register are normally known as:",opts:["Class 'A' shares","Convertible shares","Redeemable shares","Bearer shares"],ans:3,exp:"Since there is no register, bearer shares can be sold by transferring holdings from one bearer to another by simply handing over the certificate in exchange for payment. No registration is required."},
+  {id:"Q05",q:"Which of the following is considered the key advantage of STRIPS for the investor?",opts:["Investors can precisely match their liabilities","They are exempt from income tax","The return is staggered over a longer period","Coupons and redemption can be called as required"],ans:0,exp:"The key advantage of STRIPS (Separate Trading of Interest and Principal of Securities) is that investors can precisely match their liabilities, removing any reinvestment risk by holding zero-coupon instruments."},
+  {id:"Q06",q:"Which of the following is a major difference between a bond and an equity?",opts:["Bonds are generally more risky than equities","Investors generally receive full repayment of principal for bonds","Only bonds generate income for investors","Only bond holders have a legal right to vote"],ans:1,exp:"A bond is typically a contractual agreement to pay the bondholder regular interest and then repay the principal at maturity. Equities can also generate income via dividends, but repayment of capital is not guaranteed."},
+  {id:"Q07",q:"During what period can special cum trades be executed?",opts:["Any time up to the dividend payment date","From the record date to the day before the dividend payment date","From the ex-dividend date to the dividend payment date","From the ex-dividend date to the day before the dividend payment date"],ans:3,exp:"A special cum-trade can be executed up to and including the day before the dividend payment date, but NOT on or after the payment date. It is a special arrangement where the buyer during the ex-dividend period receives the next dividend."},
+  {id:"Q08",q:"What is the main downside when a company's share price becomes very high (e.g. well into double figures in pounds)?",opts:["It indicates the company is fundamentally overvalued","The shares' marketability will begin to suffer","The company will be forced to return capital to shareholders","The costs of trading become prohibitive for all investors"],ans:1,exp:"Traditionally, once a UK company's share price trades well into double figures in pounds sterling, marketability starts to suffer — smaller retail investors may avoid the stock or may not be able to buy even a single share."},
+  {id:"Q09",q:"What will occur if all of a company's shares have NOT been sold during its flotation, assuming an underwriting agreement is in place?",opts:["The underwriting firms will buy the shares at a slight premium to the offer price","The issuer's advisers will cancel the flotation and repeat it at a lower price","The underwriting firms will buy the shares at a price slightly below the offer price","The listing exchange will buy the shares at the agreed price for its stabilisation fund"],ans:2,exp:"Underwriting means financial institutions agree that if demand is insufficient, they will buy the remaining shares. The price at which underwriters guarantee to buy is generally at a discount to the public offer price."},
+  {id:"Q10",q:"Companies listed on a stock exchange are expected to have appropriate corporate and management structures. What term describes this obligation?",opts:["Self-regulation","Corporate governance","Self-assessment","Prudential regulation"],ans:1,exp:"Corporate governance is the way companies manage and control their activities — the set of laws, rules, customs and internal/external policies that guide how a company is directed. Listed companies are expected (and sometimes required) to have appropriate structures."},
+  {id:"Q11",q:"Typically, the relationship between gilt prices and market interest rates acts in which way?",opts:["Positively correlated — both move in the same direction","Inversely — they move in opposite directions","Conversely — gilts lead and rates follow","Passively — there is no systematic relationship"],ans:1,exp:"There is an inverse relationship between gilt prices and interest rates. As interest rates decrease, gilt prices increase, and vice versa. This is because the fixed coupon becomes more or less attractive relative to prevailing rates."},
+  {id:"Q12",q:"Stock lending is primarily used for which purpose?",opts:["To cover short selling of stocks","To collect dividends without legally owning the shares","To allow companies to earn income on their treasury stock","To satisfy convertible bonds upon conversion"],ans:0,exp:"The main reason for borrowing securities is to cover a short position. Short sellers have to deliver securities they have sold but do not own, so they must borrow them. A prime broker often locates and transfers the borrowed shares."},
+  {id:"Q13",q:"Why is a selective placing of shares the LEAST expensive of the main IPO methods?",opts:["Underwriting is only on a 'best efforts' basis and no prospectus is required","No prospectus is required and no underwriting is necessary","No underwriting is necessary and the prospectus can be less detailed than for an offer for sale","Underwriting is on a 'best efforts' basis and the prospectus can be less detailed than for an offer for sale"],ans:2,exp:"A placing is the least expensive option because the accompanying prospectus is less detailed than required for other methods, and no underwriting is necessary, significantly reducing costs."},
+  {id:"Q14",q:"What entity is responsible for the authorisation and recognition of the London Stock Exchange as a recognised investment exchange?",opts:["The Bank of England","The Prudential Regulation Authority (PRA)","The Financial Conduct Authority (FCA)","HM Treasury"],ans:2,exp:"The FCA must grant recognition before an exchange is allowed to operate in the UK. It has granted recognition to the LSE — making it a Recognised Investment Exchange (RIE) — by assessing whether it has sufficient systems and controls to run a market."},
+  {id:"Q15",q:"Which factor must an analyst take into account when comparing the performance of companies based in different countries?",opts:["Many listed companies publish accounting reports only every five years","Translation of accounting reports from different languages is not always straightforward","Many country-based GAAP principles have some differences from one another","Old IAS standards have been changed in some countries but not others by the IASB"],ans:2,exp:"Each country's Generally Accepted Accounting Principles (GAAP) vary to a greater or lesser extent. For example, UK GAAP differs from US GAAP in a number of respects, so adjustments are required to make accounting principles compatible before comparing companies."},
+  {id:"Q16",q:"Which of the following items will be reflected in the 'operating activities' section of a company's statement of cash flows?",opts:["Cash receipts from customers","Proceeds on issue of shares","Dividends received from investments","Purchase of fixed assets"],ans:0,exp:"Operating activities is the cash generated from trading activities. Dividends received and purchase of fixed assets are 'investing activities'. Proceeds from issuing shares are 'financing' cash flows."},
+  {id:"Q17",q:"In circumstances where a shareholder appoints a nominee to hold shares, which of the following statements is correct?",opts:["The nominee is the legal owner of the shares","The nominee automatically takes the voting rights","The nominee benefits from any increase in the value of the shares","The nominee has rights to any dividends declared on the shares"],ans:0,exp:"The nominee is the legal owner of the shares; however, the client retains the beneficial ownership — including voting rights (unless delegated), dividends and capital growth."},
+  {id:"Q18",q:"Under BIS' Delivery versus Payment (DvP) Model 2, how are trades settled?",opts:["Both securities and fund transfers are settled on a gross basis throughout the period","Both securities and fund transfers are settled on a net basis at the end of the period","Fund transfers are settled gross throughout; securities transfers are settled net at end","Securities transfers are settled gross throughout; fund transfers are settled net at end"],ans:3,exp:"Model 2 is where securities transfers are settled on a trade-for-trade (gross) basis throughout the processing cycle, while fund transfers are settled on a net basis at the end of the processing cycle."},
+  {id:"Q19",q:"What time threshold is normally used to separate current liabilities from non-current liabilities on a balance sheet?",opts:["6 months","12 months","2 years","3 years"],ans:1,exp:"Liabilities are categorised according to whether they are due within one year (current liabilities) or not (non-current liabilities). The 12-month boundary is the standard threshold under both IFRS and UK GAAP."},
+  {id:"Q20",q:"What is the rate of stamp duty charged on purchases by investors of UK company shares?",opts:["Nil","0.50%","1.00%","1.50%"],ans:1,exp:"There is a stamp duty charge of 0.5% on the purchase of UK company shares. This is paid by the buyer at the point of purchase."},
+  {id:"Q21",q:"For a listed corporate, which organisation would normally provide advice on market conditions to the company?",opts:["Lead manager","Corporate broker","Listing agent","Nominated adviser (NOMAD)"],ans:1,exp:"The corporate broker acts as an interface between the company and the stock market. In particular, the corporate broker advises the company on 'market conditions' — it is distinct from the listing agent."},
+  {id:"Q22",q:"The weight of a company in a free float-adjusted market capitalisation index is:",opts:["Equal to its unadjusted market cap weight, unless the company is a state-owned enterprise","The same as the unadjusted market cap weight if the stock is publicly traded","Always higher than its unadjusted market capitalisation weight","Always lower than or equal to its unadjusted market capitalisation weight"],ans:3,exp:"A free float-adjusted index uses a factor representing the percentage of shares freely traded (not held by large shareholders or restricted from trading). Free float shares are always less than or equal to outstanding shares, so the weight is always lower or equal."},
+  {id:"Q23",q:"Trading systems that require market makers to deal in a minimum set number of shares at a quoted price are described as:",opts:["Hybrid systems","Open outcry systems","Order-driven systems","Quote-driven systems"],ans:3,exp:"Quote-driven systems require market makers to quote bid and ask prices and deal in a minimum number of shares at those prices. Order-driven systems match buyers and sellers automatically; hybrid systems combine both."},
+  {id:"Q24",q:"When compiling an investment portfolio, diversification benefits are MAXIMISED by holding individual securities that:",opts:["Exhibit a relatively low level of individual volatility","Exhibit a relatively high level of individual volatility","Have uncorrelated returns with each other","Have returns that are perfectly positively correlated"],ans:2,exp:"Diversification benefits are maximised by holding investments with uncorrelated returns — where returns do not tend to move in the same direction and to the same degree, so that losses in one are offset by gains in another."},
+  {id:"Q25",q:"When a bond is stripped, the principal strip will normally trade:",opts:["Assuming quarterly interest payments are made","In overseas markets only, not domestic markets","At a discount to its face value","With a maximum of two onward sellers in the market"],ans:2,exp:"The principal STRIP is essentially a zero-coupon bond. Due to the time value of money, it will trade below its par (face) value. The discount reflects prevailing interest rates and the time remaining to maturity."},
+  {id:"Q26",q:"What is the effect of a bonus (scrip) issue on a company's nominal share capital and earnings per share (EPS)?",opts:["Nominal share capital down / EPS down","Nominal share capital up / EPS down","Nominal share capital down / EPS up","Nominal share capital up / EPS up"],ans:1,exp:"A bonus issue increases the number of shares in issue (so nominal share capital increases). However, since no new money is raised and earnings remain the same, EPS falls proportionately with the increase in shares."},
+  {id:"Q27",q:"One of the main reasons why a company may decide to issue new shares using a rights issue is:",opts:["To raise new capital from its existing shareholders","To negate shareholders' existing pre-emptive rights","To support and maintain its shares' current market price","To avoid any regulatory involvement in the new issue"],ans:0,exp:"In a rights issue, new shares are offered to existing shareholders in proportion to their current holdings, usually at a discount to the market price. This ensures full subscription and raises new capital from existing investors."},
+  {id:"Q28",q:"One of the key reasons for using a central counterparty (CCP) in the clearing and settlement process is because it:",opts:["Mitigates the degree of credit risk between counterparties","Facilitates transactions in multiple currencies simultaneously","Reduces the daily transaction costs for all participants","Reduces the overall processing cycle timeframe"],ans:0,exp:"Central counterparty services mitigate credit risk by interposing themselves between the buyers and sellers, becoming the buyer to every seller and the seller to every buyer. This removes bilateral counterparty risk."},
+  {id:"Q29",q:"An investor wishes to sell a large number of shares without 'spooking' the market. Tranches are sold sequentially with each new tranche automatically appearing once the previous one executes. What is this order called?",opts:["Iceberg order","Limit order","Execute and eliminate order","Fill or kill order"],ans:0,exp:"Iceberg orders show only the 'peak' (a small tranche) of the total order on the order book. Once each tranche is executed, the system automatically brings the next tranche forward. This prevents large orders from revealing full intentions and moving the market."},
+  {id:"Q30",q:"Which one of the following types of collective investment scheme is most likely deploying a PASSIVE investment methodology?",opts:["A corporate bond fund","A global growth fund","An absolute return fund","An index tracker fund"],ans:3,exp:"Passive investment managers aim to replicate the return of a benchmark index. An index tracker fund does precisely this. Corporate bond, global growth, and absolute return funds are typically active management strategies."},
+  {id:"Q31",q:"One of the ways equities provide a return for investors is through an increase in share price over time. This form of investment return is known as:",opts:["Dividend yield","Equity-risk premium","Capital appreciation","Price/earnings yield"],ans:2,exp:"Capital appreciation refers to the increase in the value of the investment (the share price rising). This may be combined with income in the form of dividends. It is the most common reason retail investors are attracted to equities."},
+  {id:"Q32",q:"The practice of 'flipping' in the context of new share issues is best described as:",opts:["An investor who bought in the secondary market earns income by lending to other investors","An investor who bought in the primary market quickly sells to profit from initial price rises","An investor who bought in the primary market sells later at a lower price after the initial rise","An investor who bought in the primary market sells promptly to avoid any risk of a dramatic fall"],ans:1,exp:"'Flipping' is the practice whereby some buyers of newly issued securities quickly sell shortly afterwards, following exaggerated market excitement about the new issue. It is a primary-market activity."},
+  {id:"Q33",q:"The ORB segment of the London Stock Exchange is used to trade which type of instrument?",opts:["AIM equities","Bonds","Covered warrants","Depositary receipts"],ans:1,exp:"The LSE's Order Book for Retail Bonds (ORB) provides an active retail market for bond trading. Although most bond trading is done by institutions through a decentralised dealer network, ORB provides a centralised retail venue."},
+  {id:"Q34",q:"Since 'offers for sale' do not require the creation of additional new shares, under what circumstances have they historically been popular?",opts:["For issue of smaller start-up companies, as founders can retain majority control","When a company's founders want to reduce all or part of their equity stake","For companies in new industries, to ensure only longer-term investors participate","For convertible debt/share issues, to allow the issuer to match supply with demand"],ans:1,exp:"Offers for sale do not require new shares to be created. They are often used by founders wishing to release part or all of their equity stake. Existing shareholdings are disposed of in order to obtain a listing."},
+  {id:"Q35",q:"One of the main differences between trading on the NYSE compared to the LSE is:",opts:["The NYSE does not have any 'specialist' market makers on its trading floor","The LSE retains some open outcry trading on its trading floor","The NYSE retains some open outcry trading carried out by 'specialists' on its trading floor","The LSE does not trade depositary receipts of foreign securities"],ans:2,exp:"Unlike the LSE, the NYSE retains some open outcry trading carried out by market participants known as 'specialists' on its trading floor. The LSE is entirely electronic."},
+  {id:"Q36",q:"Which of the following is the corporate equivalent of a government's Treasury bill (T-bill)?",opts:["Commercial paper","Certificates of deposit","Debenture","Loan stock"],ans:0,exp:"Commercial paper is an unsecured, short-term promissory note issued primarily by corporations. Just as T-bills are short-term government instruments, commercial paper serves the same function for corporates."},
+  {id:"Q37",q:"In capital-at-risk structured products, the term 'soft floor' refers to the fall in the value of an index above which an investor will:",opts:["Not suffer any loss of capital whatsoever","Suffer a loss of capital only above the FSCS protection limit","Suffer an equivalent proportional loss of capital","Suffer a full loss of all capital invested"],ans:3,exp:"With a 'soft floor', the investor gets most or all of their money back as long as the underlying index does not fall by more than a certain proportion. If the index falls beyond the soft floor level, the investor suffers the full loss."},
+  {id:"Q38",q:"Which of the following financial ratios provides the degree of 'leverage' within a company?",opts:["Asset turnover ratio","Current ratio","Debt-to-equity ratio","Return on capital employed"],ans:2,exp:"The debt-to-equity ratio measures financial gearing, which is also known as leverage. It shows the proportion of a company's funding that comes from debt relative to equity."},
+  {id:"Q39",q:"How do market makers help to prevent irregular and erratic price movements in shares?",opts:["By predicting the stable price of shares and consistently buying at that price","By purchasing shares in companies which appear to be in financial difficulty","By buying shares at a discount and selling them at a premium to profit","By continually offering bid prices to sellers and ask prices to buyers at all times"],ans:3,exp:"Market makers stand ready to provide liquidity. By being prepared to provide a bid for shares that parties want to sell and an ask for parties wanting to buy at any time, they smooth out erratic price movements caused by lack of liquidity."},
+  {id:"Q40",q:"What does an 'inverted' yield curve most directly indicate?",opts:["There is an expectation of higher inflation in the longer term","There is an expectation of a significant reduction in interest rates in the future","There is an expectation of an economic downturn or recession in the near term","There is an expectation of sustained deflationary pressure in the longer term"],ans:1,exp:"In an inverted yield curve, short-term government bond yields exceed long-term yields. This occurs when there is an expectation of a significant reduction in interest rates in the future, often driven by expectations of easier monetary policy."},
+  {id:"Q41",q:"Quantity-adjusting structured products (quantos) are designed to protect the investor against which of the following risks?",opts:["Counterparty default risk","Inflation risk over the product's lifetime","High ongoing management fees","Adverse currency movements when the underlying is in a foreign currency"],ans:3,exp:"Quantity-adjusting (quanto) structured products have a built-in currency hedge that removes foreign currency fluctuations. This is particularly relevant when the underlying index or asset is denominated in a foreign currency."},
+  {id:"Q42",q:"A bond which is structured with a sinking fund:",opts:["Will be riskier than a bond with no sinking fund, if all other terms are the same","Will trade at higher yields than a similar bond without a sinking fund","Will be less risky than a bond with no sinking fund, if all other terms are the same","Has an unconditional guarantee from the issuer for full repayment at maturity"],ans:2,exp:"A sinking fund means the issuer sets aside funds annually toward repaying the principal. This improves the security and creditworthiness of the issue, making it less risky for investors than a comparable bond without one."},
+  {id:"Q43",q:"When credit card receivables are packaged together into a bond issue and sold to a third party, this is an example of which of the following?",opts:["A convertible bond transaction","An exchangeable bond transaction","A reverse repo transaction","Securitisation"],ans:3,exp:"Securitisation is the packaging of rights to a future revenue stream into a bond issue. Examples include pools of mortgages, auto loan payments, musicians' royalties, or credit card receivables."},
+  {id:"Q44",q:"What is the purpose of algorithmic orders used by high-frequency traders (HFTs)?",opts:["They allow the fast transmission of orders designed to perform in a pre-programmed way","They allow market stability and often react to circuit breakers where trading is suspended","They allow HFTs to build large book positions with little or no market risk","They provide direct market access enabling clients to access cheaper market coverage"],ans:0,exp:"High-frequency trading involves the use of powerful computers programmed to rapidly transmit orders based on algorithms. The algorithms pre-define the behaviour of the orders under various market conditions."},
+  {id:"Q45",q:"An investor invests £10,000 into a 5% coupon corporate bond priced at 125. The coupon is paid semi-annually. What is the next coupon payment amount?",opts:["£200","£250","£400","£500"],ans:0,exp:"The investor buys £8,000 nominal (£10,000 ÷ 125 × 100 = £8,000). The annual coupon is £400 (£8,000 × 5%). Since coupons are paid semi-annually, the next payment is £200 (£400 ÷ 2)."},
+  {id:"Q46",q:"After a recent reorganisation, a company has estimated costs but does not know the precise amount or when they will be payable. Where would these be reflected in the statement of financial position?",opts:["Non-current liabilities","Current assets","Intangible non-current assets","Tangible non-current assets"],ans:0,exp:"Non-current liabilities include provisions resulting from past events for which there is an obligation to pay, but where the exact amount or timing has not yet been established. This matches the description of post-reorganisation provisions."},
+  {id:"Q47",q:"What does it indicate when a company has a dividend cover of 0.8?",opts:["It is paying out 80% of its after-tax profits as dividend","It made an after-tax loss for the year equal to 20% of its dividend","Its profits were not sufficient to fully cover the dividend declared","It retained 20% of its earnings after paying the dividend"],ans:2,exp:"Dividend cover compares earnings to dividends paid. A cover below 1.0 means the dividend is 'uncovered' — the year's profits were not enough to cover the dividend. A cover of 0.8 means earnings were 20% less than the dividend paid."},
+  {id:"Q48",q:"A bond with a 5.5% coupon has two years to maturity. Its current market price is £85.91 per £100 nominal. What is the flat (running) yield?",opts:["6.40%","5.50%","3.20%","2.75%"],ans:0,exp:"Flat yield = (Annual coupon ÷ Price) × 100 = (5.5 ÷ 85.91) × 100 = 0.0640 × 100 = 6.40%. The flat yield rises above the coupon rate when the bond is trading at a discount to par."},
+  {id:"Q49",q:"One way that a government whose economy has high inflation might raise funds in the bond market would be to issue:",opts:["Bonds denominated in another country's currency","Inflation index-linked bonds","Convertible currency bonds","Bonds underwritten by another government"],ans:1,exp:"Inflation index-linked bonds pay coupons linked to an inflation index. If inflation rises, investors receive a larger coupon to compensate. The redemption amount is also linked to inflation, protecting investors over the life of the bond."},
+  {id:"Q50",q:"Which of the following is a major risk for investors of bonds issued by emerging market economies in local currency?",opts:["Currency devaluation reducing the value of returns in the investor's base currency","Renominalisation of the bond's face value by the issuer","Redenomination of the bond into a different currency","Overpricing of underlying assets backing the bond"],ans:0,exp:"Emerging market bonds in local currency pose currency risk. Exchange rate fluctuations and currency devaluations can positively or negatively affect yield when converted into the investor's home currency."}
+];
+
+const QS2 = [
+  {id:"T2Q01",q:"A key drawback of an investor placing their money in an instant-access deposit account is that:",opts:["They will usually receive the lowest rate of interest available","Returns will always be taxable","They will be subject to counterparty risk","They will be subject to shortfall risk"],ans:0,exp:"Instant-access deposit accounts offer immediate liquidity but typically pay the lowest interest rates as the trade-off. Counterparty risk applies to more complex instruments; shortfall risk is about returns not meeting targets, not specific to instant-access."},
+  {id:"T2Q02",q:"An investor has purchased Treasury Bills (T-bills). She should be made aware that the returns payable will be:",opts:["Capped by the regulatory authority","Determined by the price paid","In the form of a fixed coupon payment","In the form of a variable coupon payment"],ans:1,exp:"T-bills are issued at a discount to par and redeemed at par — so the return is determined by the price paid at issue. They carry no coupon; the difference between purchase price and redemption value represents the investor\'s return."},
+  {id:"T2Q03",q:"Which of the following is the best description of a bond\'s coupon at par?",opts:["The market value of the bond at issue","The market value of the bond, cum dividend","The interest rate that the borrower pays to the bondholder","The total amount that will be paid on the redemption date"],ans:2,exp:"The coupon is the interest rate stated on the bond, expressed as a percentage of par value, which the issuer pays to bondholders. At par, the coupon rate equals the yield; it is not the market value or redemption amount."},
+  {id:"T2Q04",q:"An investor considering investing in an unregulated collective investment scheme should be made aware that:",opts:["The fund must hold a range of assets and not just a single holding","The fund will not be permitted to gear","Such an investment should be considered to be a long-term commitment","Performance fees will be prohibited"],ans:2,exp:"Unregulated CIS are illiquid, complex, and typically long-term commitments. Unlike regulated funds, they can hold concentrated positions, may gear heavily, and frequently charge performance fees."},
+  {id:"T2Q05",q:"When considering the operation and characteristics of private equity funds, a fund manager should be aware that:",opts:["Returns are usually correlated with the economic cycle","Such funds cannot be marketed to retail clients","This type of fund must be set up under a trust deed","The use of performance fees is not permitted"],ans:0,exp:"Private equity returns tend to correlate with the economic cycle as they invest in companies whose valuations and exit opportunities are driven by economic conditions. They can be marketed to sophisticated investors, have flexible structures, and commonly use performance fees (carried interest)."},
+  {id:"T2Q06",q:"A key consideration to a broker who is considering placing clients\' investments in emerging and frontier markets is that:",opts:["Less liquidity will be in evidence","Settlement periods are usually longer than 7 days","These markets do not have the same degree of sophistication as developed markets","There is always a greater risk of either bribery or corruption taking place"],ans:2,exp:"Emerging and frontier markets generally lack the regulatory infrastructure, market depth, and institutional sophistication of developed markets. While liquidity may be lower, settlement and corruption issues are not universal characteristics."},
+  {id:"T2Q07",q:"A bond has been issued where, on maturity, a single repayment will be made on the specified date. This type of bond is:",opts:["A bond to a sinking fund","A bullet issue","A government bond","A corporate bond"],ans:1,exp:"A bullet bond (or bullet issue) repays the entire principal in a single payment at maturity. Sinking fund bonds repay gradually. The category of issuer (government vs corporate) is separate from the repayment structure."},
+  {id:"T2Q08",q:"Which type of risk is involved with risks concerning the potential collapse of a financial market?",opts:["Counterparty risk","Liquidity risk","Settlement risk","Systematic risk"],ans:3,exp:"Systematic risk (also called market risk or systemic risk) relates to risks affecting the entire financial system or market, including potential collapse. Counterparty risk is bilateral; liquidity risk relates to inability to trade; settlement risk relates to failure to deliver."},
+  {id:"T2Q09",q:"Which passive bond strategy involves constructing a bond portfolio whose coupon and redemption payment cash flows are synchronised to match those of the liabilities to be met?",opts:["Cash matching","Duration-based immunisation","Policy switching","Anomaly switching"],ans:0,exp:"Cash matching involves structuring a bond portfolio so that its cash inflows precisely match the timing and amount of known future liabilities. Duration immunisation matches interest rate sensitivity rather than specific cash flows."},
+  {id:"T2Q10",q:"If a GBP/USD spot quote is $1.1465-$1.1635 and the three-month forward is 1.01-0.96c pm, what will be the three-month forward quote?",opts:["1.0455-1.0675","1.1364-1.1539","1.1566-1.1731","1.2475-1.2595"],ans:1,exp:"\'pm\' means premium to the US dollar (USD at a discount), so we subtract the forward points. Bid: 1.1465 - 0.0101 = 1.1364. Offer: 1.1635 - 0.0096 = 1.1539. Forward quote: 1.1364-1.1539."},
+  {id:"T2Q11",q:"How do financial statements help when assessing a company\'s standing in the market place?",opts:["By identifying the width of its product range","By showing relative profitability compared to its competitors","By demonstrating innovation within its industry sector","By benchmarking its company-wide remuneration package"],ans:1,exp:"Financial statements enable investors and analysts to compare profitability metrics (margins, ROCE, EPS) across competitors, providing an objective basis for assessing competitive standing. Product range, innovation, and pay are not directly shown in financial statements."},
+  {id:"T2Q12",q:"A client with a lump sum to invest was correctly advised to choose Treasury Bills in preference to equities. Which of the following is the most likely explanation for this advice?",opts:["The client wanted to prioritise income over capital growth","The client had demonstrated an adventurous attitude to risk","The client hoped to inflation-proof the investment","The client would need access to the funds in three months\' time"],ans:3,exp:"T-bills are short-term, highly liquid, low-risk instruments. Advising T-bills over equities is most appropriate where the investment horizon is very short (e.g. three months), as equities carry capital risk over short periods and T-bills mature quickly."},
+  {id:"T2Q13",q:"An analyst is producing a report assessing the environmental, social and governance qualities of a selected company. Which area is most likely to be covered under the governance section?",opts:["The company\'s health and safety record","The amount the company gives to local charities","The level of transparency operated by the company","The extent of the company\'s carbon footprint"],ans:2,exp:"Governance covers board structure, transparency, accountability, and internal controls. Health and safety is social (S); charitable giving is social (S); carbon footprint is environmental (E). Transparency of reporting and decision-making is a classic governance factor."},
+  {id:"T2Q14",q:"A large US oil company is being floated on both NYSE and LSE. Beta Ltd is a London-based investment bank responsible for the UK listing. Beta\'s role within the syndicate would MOST LIKELY be described as a:",opts:["Sponsor","Co-manager","Co-lead manager","Book runner"],ans:2,exp:"When a firm manages the listing in one jurisdiction alongside a lead manager responsible for the primary listing in another, it is typically described as co-lead manager for that market. A sponsor has a regulatory role on the Main Market; a book runner manages the order book."},
+  {id:"T2Q15",q:"Which method is the least expensive for a company to raise funds?",opts:["Introduction","Offer for sale","Offer for subscription","Placing"],ans:3,exp:"A placing is the least expensive method as shares are sold directly to selected institutional investors with a less detailed prospectus and no requirement for underwriting. An introduction raises no new money; offers for sale and subscription require full prospectuses and underwriting."},
+  {id:"T2Q16",q:"XYZ Ltd appoints professional service firms to form an origination team for its LSE flotation. Which part of the team is responsible for carrying out the due diligence on the prospectus?",opts:["The legal adviser and corporate broker","The listing agent only","The legal adviser only","The legal adviser and reporting accountant"],ans:3,exp:"Due diligence on the prospectus is a joint responsibility of the legal adviser (legal accuracy) and the reporting accountant (financial accuracy and verification). The corporate broker advises on market conditions; the listing agent handles the listing mechanics."},
+  {id:"T2Q17",q:"Why might an organisation build a strategic stake in a listed company?",opts:["It wants to reduce market liquidity in that company\'s shares","It wants to exert influence on the decision making of the other company","It wants to force the company into a merger situation","It seeks to increase the share price of the other company"],ans:1,exp:"A strategic stake (typically 10-25%) gives the holder sufficient voting power to influence board decisions, strategy, and major transactions, without necessarily triggering a full takeover bid. It is about influence rather than control."},
+  {id:"T2Q18",q:"XYZ plc issues new shares by way of rights at 40p. The nil paid share price is 10p. Your client is entitled to 2,000 new shares and wishes to sell sufficient to take up the balance. How many shares will he be able to take up?",opts:["350","400","450","500"],ans:1,exp:"To take up N shares at 40p, the client must raise N × 40p by selling (2,000 - N) rights at 10p each. So: (2,000 - N) × 10 = N × 40 → 20,000 - 10N = 40N → 20,000 = 50N → N = 400."},
+  {id:"T2Q19",q:"Which of the following is a feature of a quote driven market but NOT of an order driven market?",opts:["Deals input by buyers and sellers are automatically matched","Trading is less liquid as trade sizes are smaller","Market makers must display bid and offer prices","Market makers match the orders of buyers and sellers"],ans:2,exp:"In quote-driven markets, market makers are obliged to display firm bid and offer prices at which they will deal. In order-driven markets, trades are matched automatically from buy and sell orders — no market makers are required."},
+  {id:"T2Q20",q:"The price of a corporate bond is directly influenced by:",opts:["The company\'s P/E ratio","New gilt issues","Trading in the company\'s shares","The equivalent benchmark bond"],ans:3,exp:"Corporate bond prices are primarily driven by credit spreads over the equivalent government (benchmark) bond of the same maturity. Gilt issues affect the benchmark rate, but it is the benchmark bond price itself that directly determines corporate bond pricing."},
+  {id:"T2Q21",q:"Which of the following is a key difference when comparing a company\'s profit against cash?",opts:["Cash received exceeds cash paid","Recognition of revenues at point of sale","Profit is based on cash paid rather than expenditure incurred","Purchase of a non-tangible asset is gradually paid in cash over a period"],ans:1,exp:"Profit is recognised on an accruals basis — revenue is recognised at the point of sale, regardless of when cash is received. This is the fundamental difference between profit (accruals) and cash flow (actual receipts and payments)."},
+  {id:"T2Q22",q:"What is a key feature of money market instruments that makes them popular with some investors?",opts:["High volatility in daily price movements","Relative stability of daily price movements","A wide range of redemption dates","A regular flow of income unavailable elsewhere"],ans:1,exp:"Money market instruments (T-bills, CDs, commercial paper) are very short-term and highly liquid, resulting in minimal price volatility. This price stability makes them attractive for cash management and capital preservation."},
+  {id:"T2Q23",q:"If the \'Dow divisor\' used to calculate the Dow Jones Industrial Average Index is 0.2, this means that a $1 price change of a component stock will, in itself, trigger an index movement of:",opts:["2 points","5 points","20 points","50 points"],ans:1,exp:"The DJIA is price-weighted: index movement = price change ÷ divisor = $1 ÷ 0.2 = 5 points. The divisor adjusts for stock splits and other corporate actions."},
+  {id:"T2Q24",q:"What type of financial instrument is always issued at a discount to par?",opts:["Eurobonds","American Depositary Receipts","Commercial Paper","Debentures"],ans:2,exp:"Commercial paper is a discount instrument — it is always issued below par and redeemed at par, with no coupon payments. The return is the difference between the purchase price and the redemption value."},
+  {id:"T2Q25",q:"Spot transactions in the foreign exchange market are normally settled within a MAXIMUM of how many working days?",opts:["1","2","3","4"],ans:1,exp:"FX spot transactions conventionally settle on T+2 (two business days after the trade date). This is the market standard for most currency pairs, including EUR/USD and GBP/USD."},
+  {id:"T2Q26",q:"In a EUR/USD transaction, the US dollar is often described as the:",opts:["Base currency","Bid currency","Cross currency","Counter currency"],ans:3,exp:"In a EUR/USD quote, EUR is the base (or commodity) currency and USD is the counter (or terms/quote) currency — the one in which the price is expressed. \'Bid\' and \'cross\' are not the correct terms here."},
+  {id:"T2Q27",q:"Harry recently received a provisional allotment letter in connection with an offer for sale. This confirms that he is:",opts:["Utilising the greenshoe option","A board director of the issuing company","An existing shareholder","Taking advantage of a nil paid rights transaction"],ans:2,exp:"A provisional allotment letter is issued to existing shareholders in a rights issue — it confirms their entitlement to subscribe for new shares. An offer for sale here refers to the specific context where existing shareholders are offered new shares."},
+  {id:"T2Q28",q:"An investor with an equity portfolio recently suffered from the effects of unsystematic risk. This could have manifested itself as a result of:",opts:["A strengthening in bond prices","An unexpected increase in interest rates","A sharp fall in the FTSE All Share Index","A profits warning from a particular company"],ans:3,exp:"Unsystematic (or specific) risk affects individual companies or sectors, not the whole market. A profits warning from one company is a company-specific event. Market-wide events (rate changes, index falls) are systematic risks."},
+  {id:"T2Q29",q:"What is the MAIN purpose of continuous linked settlement?",opts:["To reflect all currency price movements in a trade","To remove market risk from the trading process","To ensure matching transaction payments are made simultaneously","To minimise processing costs when completing transactions"],ans:2,exp:"Continuous Linked Settlement (CLS) eliminates Herstatt (settlement) risk by ensuring both legs of an FX transaction are settled simultaneously — payment versus payment. This removes the risk that one party delivers currency but the other fails to deliver."},
+  {id:"T2Q30",q:"The theory that Country X\'s currency will deteriorate against Country Y\'s currency if it has a higher inflation rate, is generally known as:",opts:["Collateralised price adjusting","Purchasing power parity","Synthetic exchange revaluation","Cost benefit equalisation"],ans:1,exp:"Purchasing Power Parity (PPP) theory states that exchange rates will adjust so that identical goods cost the same across countries. A country with higher inflation will see its currency depreciate to maintain this equilibrium."},
+  {id:"T2Q31",q:"ABC Plc carries out a one-for-five rights issue. The cum-rights price is 460p and the rights issue price is 250p. What will be the value of the nil paid rights?",opts:["35p","42p","175p","210p"],ans:2,exp:"TERP = (5 × 460 + 1 × 250) ÷ 6 = (2,300 + 250) ÷ 6 = 2,550 ÷ 6 = 425p. Nil paid rights value = TERP − rights price = 425 − 250 = 175p."},
+  {id:"T2Q32",q:"A company wishes to issue €10m in zero coupon bonds. The issue will be priced:",opts:["At a premium to face value","At a discount to face value","At nominal value","At par value"],ans:1,exp:"Zero coupon bonds carry no periodic interest payments. They are issued at a discount to face value and redeemed at par, with the difference representing the investor\'s total return over the bond\'s life."},
+  {id:"T2Q33",q:"A securities broker charges commission at 0.6% for client X and 1.4% for client Y. This indicates that:",opts:["Client X is trading bonds, client Y is trading equities","Client X is based in the UK, client Y is based offshore","Only client Y is named in the International Order Book","Only client Y is being provided with research and/or advice services"],ans:3,exp:"A higher commission rate typically reflects additional services being provided — such as research and investment advice. An execution-only (no advice) service would carry a lower rate like 0.6%; the 1.4% rate suggests client Y receives advisory services."},
+  {id:"T2Q34",q:"A trade is being conducted through a gilt inter-dealer broker (IDB). A key feature of this situation is that the:",opts:["IDB takes the principal position","Market makers remain anonymous at all times","IDB is operating as a division of a broker-dealer","Market makers are both national Governments"],ans:1,exp:"Gilt IDBs provide an anonymous electronic trading platform through which gilt-edged market makers can trade with each other. The anonymity allows market makers to trade without revealing their positions to competitors."},
+  {id:"T2Q35",q:"Ann purchased new shares arising from a placing by Company X. This confirms that she was:",opts:["Selected by her financial intermediary","An existing shareholder","Sent an offer for subscription by the company","Offered favourable terms under an open offer"],ans:0,exp:"In a placing, shares are allocated to selected institutional investors chosen by the company\'s broker or financial intermediary. Ann did not need to be an existing shareholder; shares are selectively placed, not offered to all shareholders."},
+  {id:"T2Q36",q:"In exercising rights under a rights issue, a shareholder has decided to retain his existing holding and has instructed the broker to issue split allotment letters. This MOST likely indicates the investor:",opts:["Wishes to sell rights to all the new shares without any investment of capital","Wishes to sell sufficient rights to enable purchase of the remainder without any investment of capital","Plans to purchase the full rights issue but resell it immediately at a profit","Plans to purchase the full rights issue but resell a proportion immediately at a profit"],ans:1,exp:"Split allotment letters divide the rights entitlement into two parts — one to sell and one to exercise. The investor sells enough rights to fund the purchase of the remaining new shares, resulting in no net cash outflow. This is called \'tail swallowing\'."},
+  {id:"T2Q37",q:"An investor is deemed to be a potential predator regarding shares in Company X and has notified X that it holds 4% of its shares. The investor must now notify the company if:",opts:["The holding increases to 4.75%","The holding falls to 2.95%","Further shares are purchased under contracts for differences","Any options are held on these shares"],ans:1,exp:"Under the Disclosure and Transparency Rules, a potential predator must disclose when their holding falls below a whole percentage threshold as well as rising above one. A fall from 4% to 2.95% crosses the 3% threshold downward, triggering disclosure."},
+  {id:"T2Q38",q:"The seller of a security is at the confirmation stage of the clearing and settlement process. This indicates that:",opts:["They have agreed the basis on which the trade will proceed","The settlement system has matched the buyer\'s and seller\'s details","Both the purchase price and security have reached the transfer stage","The settlement system has updated the security register and activated a bank transfer"],ans:0,exp:"The confirmation stage occurs at the very beginning of the settlement process — it is when both parties agree the terms of the trade (price, quantity, settlement date). Matching, transfer, and registration come at later stages."},
+  {id:"T2Q39",q:"In order to amortise an asset over its useful life, a company must:",opts:["Create a cash reserve to fund the asset\'s replacement","Calculate the asset\'s annual contribution towards profits","Reflect an ongoing reduction in the company\'s financial statements","Show a proportionate annual expense in the statement of cash flows"],ans:2,exp:"Amortisation is the systematic allocation of the cost of an intangible asset over its useful life, reflected as a periodic charge in the income statement and a reduction in the asset\'s carrying value on the balance sheet. It is not a cash flow."},
+  {id:"T2Q40",q:"Which type of entity within the wholesale financial services sector is most likely to arrange settlement of any purchases of securities for its clients?",opts:["Custodian","Stockbroker","Investment bank","Fund manager"],ans:0,exp:"Custodians specialise in the safekeeping of client assets and the settlement of securities transactions on behalf of clients. They hold securities, process dividends, and arrange settlement — these are core custodial functions."},
+  {id:"T2Q41",q:"A fund manager is considering the purchase of Japanese Government Bonds (JGBs) or German Bobls. He should be aware that:",opts:["The German Bobl is likely to have the shorter period to maturity","The German Bobl will have the longest settlement period","The German Bobl pays its coupon on a semi-annual basis","Both the JGB and the German Bobl pay coupons with the same frequency"],ans:0,exp:"German Bobls are medium-term government bonds with maturities of 5 years, while JGBs are issued across a wider range including 10, 20, 30 and 40 years. So the Bobl typically has the shorter maturity."},
+  {id:"T2Q42",q:"A key benefit of Rafiq investing in a REIT compared with investment in residential property is that:",opts:["He will reduce his exposure to liquidity risk","Stamp duty will be payable at a reduced rate","He will receive dividend income which is usually tax free","He will benefit from tax-free capital growth"],ans:0,exp:"REITs are listed on stock exchanges, making them far more liquid than direct residential property — which can take months to buy or sell. Stamp duty on REIT shares is 0.5%; REIT dividends are taxable; capital growth is also taxable."},
+  {id:"T2Q43",q:"A private investor is considering investing in an unregulated collective investment scheme. With regard to the potential returns, she should be aware that:",opts:["Capital and income returns will be guaranteed","Only capital returns will be guaranteed","Only income returns will be guaranteed","Neither capital nor income returns will be guaranteed"],ans:3,exp:"Unregulated CIS carry no guarantee of returns whatsoever — neither capital nor income is guaranteed. They are high-risk investments typically only suitable for sophisticated investors who understand and can afford the risk of losing their entire investment."},
+  {id:"T2Q44",q:"What key benefit usually arises from the use of central counterparties when executing trades on an exchange\'s order book?",opts:["Greater transparency as to the identity of the dealing parties","Improved prices","The lack of netting of transactions","A reduction in trade volumes"],ans:1,exp:"CCPs improve pricing through the netting of transactions, which reduces the number and value of settlements required. They actually anonymise the dealing parties (not increase transparency) and facilitate netting (the opposite of choice C)."},
+  {id:"T2Q45",q:"What is the key difference between stock lending and repurchase agreements?",opts:["Under a stock lending agreement, a fee is charged to the borrower","Under a stock lending agreement, a fee is charged by the borrower","Under a repurchase agreement, a fee is charged by the borrower","Under a repurchase agreement, a fee is charged to the borrower"],ans:0,exp:"In stock lending, the lender of securities charges a lending fee to the borrower. In a repo, the seller (who repurchases) pays a repo rate (interest) — the fee is implicit in the difference between the sale and repurchase prices."},
+  {id:"T2Q46",q:"To assess the default risk of a company, an investment analyst should primarily make use of:",opts:["Counterparty risk analysis","Regression analysis","Gearing ratios","Credit ratings"],ans:3,exp:"Credit ratings (from agencies such as Moody\'s, S&P, Fitch) are the primary tool for assessing default risk, as they synthesise financial analysis, industry position, and management quality into a single comparable metric. Gearing ratios are inputs to credit analysis, not the primary output."},
+  {id:"T2Q47",q:"Which type of entity within the wholesale sector of the financial services market is most likely to engage in treasury dealing for corporate clients?",opts:["Fund managers","Custodians","Investment banks","Investment services providers"],ans:2,exp:"Investment banks operate treasury desks that provide foreign exchange, interest rate, and liquidity management services to corporate clients. Fund managers invest on behalf of clients; custodians hold assets; investment services providers offer a broad range."},
+  {id:"T2Q48",q:"Which of the following is TRUE of ordinary share voting rights?",opts:["The number of votes is in direct proportion to the number of shareholders voting","Unused voting rights may be used at the discretion of the Company\'s Chairman","A shareholder may appoint a third party to vote on his/her behalf at an annual general meeting","Shareholders must vote in person at extraordinary general meetings"],ans:2,exp:"Shareholders may appoint a proxy (a third party) to vote on their behalf at AGMs and EGMs. Each share typically carries one vote. Unused votes cannot be reallocated by the Chairman; EGMs do not require in-person attendance."},
+  {id:"T2Q49",q:"Ordinary shareholders are usually entitled to a dividend:",opts:["Proposed by the directors at each AGM","At a fixed rate per year","At a fixed proportion of the company\'s profits","Equal to their share\'s paid-up capital"],ans:0,exp:"The directors recommend a dividend, which is then approved (or not) at the AGM. There is no fixed rate or fixed proportion — dividends are discretionary and depend on profitability, cash flow, and board decisions."},
+  {id:"T2Q50",q:"A free float calculation excludes:",opts:["Shares held by owners holding more than 3% of all shares","Insider holdings","Shares held under an ADR scheme","Shares held within a Nominee company"],ans:1,exp:"The free float excludes shares not freely available to trade — primarily insider holdings (directors, controlling shareholders, strategic stakes). ADR shares and nominee-held shares can still be freely traded."},
+  {id:"T2Q51",q:"A bond is issued with: £100% par value; 3.5% coupon; maturity date 17 October 2022. What basic information is missing?",opts:["Nominal value","Issuer\'s name","Bondholder\'s name","Interest rate payable"],ans:1,exp:"The specification gives par value (£100%), coupon (3.5%), and maturity date, but crucially omits the identity of the issuer — who is borrowing the money and obligated to pay. The bondholder\'s name is not part of a bond specification."},
+  {id:"T2Q52",q:"The MOST accurate description of modified duration is it:",opts:["Predicts the price movement in a bond given a change in its yield","Gives a bond a risk weighting expressed in years","Allows a bond to be valued by discounting future cash flows","Is used by non-tax-paying investors to determine yield returns"],ans:0,exp:"Modified duration measures the sensitivity of a bond\'s price to changes in yield — specifically, it predicts the approximate percentage price change for a 1% change in yield. Macaulay duration gives a time-weighted average; discounted cash flow is a valuation technique."},
+  {id:"T2Q53",q:"A client holds £20,000 nominal of XYZ plc 6% Bond. Ignoring taxation, what is the annual income received assuming the current price is £120?",opts:["£720","£1,000","£1,200","£1,400"],ans:2,exp:"Annual income = nominal value × coupon rate = £20,000 × 6% = £1,200. The current market price is irrelevant to the coupon income — income is always calculated on nominal (face) value."},
+  {id:"T2Q54",q:"The shape of a yield curve for bonds is usually a good indication of the:",opts:["Extent to which returns will be influenced by a change in demand","Market view on the level of future interest rates","Degree of volatility in their pricing","Relationship between bond and equity returns"],ans:1,exp:"The yield curve plots yields against maturities and reflects the market\'s consensus expectations about future interest rates. A normal (upward sloping) curve implies rising rate expectations; an inverted curve implies falling rate expectations."},
+  {id:"T2Q55",q:"Determine the present value (PV) of a £100 nominal bond with a zero rate coupon, redeemable in two years at a discount rate of 6%?",opts:["£106","£94.34","£89","£112.36"],ans:2,exp:"PV = £100 ÷ (1.06)² = £100 ÷ 1.1236 = £89.00 (rounded). A zero coupon bond\'s PV is simply the face value discounted at the required rate over the number of years."},
+  {id:"T2Q56",q:"Which of the following methods does a credit agency use to rate a bond issuer?",opts:["Reviewing the bond issuer\'s assets","Whether the cash generated will be sufficient to service and repay its debts","Whether the coupon rate of the bond is suitable","Reviewing the potential yield of the bond"],ans:1,exp:"Credit agencies focus on the issuer\'s ability to generate sufficient cash flow to meet debt service obligations (interest and principal repayment). Asset values are considered but cash flow analysis is the primary methodology."},
+  {id:"T2Q57",q:"An American Depositary Receipt is:",opts:["An entitlement to an underlying US share","The right to buy shares in a US company on a specified date","The right to buy shares in a non-US company on a specified date","An entitlement to an underlying non-US share"],ans:3,exp:"An ADR is a certificate issued by a US depositary bank representing ownership of shares in a non-US company. It allows US investors to hold and trade foreign shares on US exchanges in US dollars."},
+  {id:"T2Q58",q:"Which of the following factors is the BEST example of a main determinant of currency exchange rate movements?",opts:["Consumer price indices","Interest rate differentials","The performance of commodity prices","Weather events and natural disasters"],ans:1,exp:"Interest rate differentials between countries are one of the most important drivers of exchange rate movements. Capital flows to higher-yielding currencies, causing appreciation. While CPI data matters, interest rates are the primary and most direct determinant."},
+  {id:"T2Q59",q:"The trading in shares of a company that does not meet formal stock exchange listing requirements is usually described as:",opts:["Open outcry","Over the counter","Unlisted securities transactions","Negotiated trades"],ans:1,exp:"Over-the-counter (OTC) markets facilitate trading in securities that are not listed on formal exchanges, without formal listing requirements. Transactions occur directly between parties or through dealers."},
+  {id:"T2Q60",q:"Which of the following is a corporate governance expectation for an issuer planning to list securities?",opts:["A listing agent must be appointed in advance","The corporate broker must ensure a market exists in the shares","Non-executive directors from other industries must be appointed","The role of chairman and chief executive should be split"],ans:3,exp:"The UK Corporate Governance Code expects (and the FCA requires for Premium listings) that the roles of Chairman and CEO should be held by different individuals, preventing concentration of power."},
+  {id:"T2Q61",q:"What benefit does stabilisation bring to the issuer and investors?",opts:["Reduces volatility across the market, making it more attractive to buy and hold shares","Fixes the lot-size in which shares can be traded, reducing volatility","The shares can be sold at a guaranteed price for a fixed period after flotation","Makes the shares look less volatile, reducing the likelihood of panic selling"],ans:3,exp:"Post-IPO stabilisation allows the stabilising manager to purchase shares in the market to support the price if it falls below the offer price. This reduces visible volatility and prevents panic selling, benefiting both issuer (share price support) and investors (orderly aftermarket)."},
+  {id:"T2Q62",q:"Convertible bonds offer which of the following that exchangeable bonds do not?",opts:["A regular coupon payment","Shares in the underlying company","The right to redeem at any time","Voting rights similar to ordinary shares"],ans:1,exp:"Convertible bonds convert into newly issued shares of the issuing company itself. Exchangeable bonds convert into shares of a different (third-party) company already held by the issuer. So convertibles uniquely offer shares in the underlying company."},
+  {id:"T2Q63",q:"When an issuer of new bonds is deciding which investment bank it wants to assist in the issue, the decision is normally finalised after which stage of the process?",opts:["Roadshow","Pitching","Marketing","Tendering"],ans:1,exp:"The bond issuance process begins with investment banks pitching (presenting their credentials and proposed terms). After reviewing the pitches, the issuer selects the bank(s) before moving to the mandate, documentation, roadshow, and pricing stages."},
+  {id:"T2Q64",q:"Which of the following is a disadvantage of an order driven market?",opts:["No guarantee of order execution","There is less transparency","Market makers are needed to quote prices","Trades are not matched automatically"],ans:0,exp:"In an order-driven market, orders are matched when a corresponding buy and sell order exists at the same price. If no matching order exists, the order may sit unexecuted — there is no market maker obliged to trade. This is the key disadvantage."},
+  {id:"T2Q65",q:"KLF Securities Ltd buys and sells shares for clients and also carries out transactions on its own behalf. This type of firm is MOST likely to be known as a:",opts:["Broker dealer","Inter dealer broker","Market maker","Principal"],ans:0,exp:"A broker-dealer is a firm that both executes orders on behalf of clients (broker function) and trades on its own account (dealer function). An IDB trades between market makers; a market maker quotes prices; a principal trades only for its own account."},
+  {id:"T2Q66",q:"When a nominee company takes registered title to shares, it becomes the:",opts:["Beneficial owner","Appointed proxy","Legal owner","Sub registrar"],ans:2,exp:"When a nominee company takes registered title, it becomes the legal owner on the share register. The underlying client remains the beneficial owner — entitled to dividends and capital growth but not appearing on the register."},
+  {id:"T2Q67",q:"The use of a designation on an account is primarily used:",opts:["As a legal appendage to the account","As a reference to identify the account","To identify the underlying owner in a pooled account","To identify stock held by nominees only"],ans:1,exp:"A designation (e.g. \'SMITH\' or \'CLIENT A\') is added to a nominee account primarily as a reference code to identify the account or distinguish between multiple clients of the same nominee, without necessarily identifying the underlying beneficial owner."},
+  {id:"T2Q68",q:"Which of the following is sometimes considered a disadvantage of holding shares through a pooled nominee?",opts:["Loss of dividend income","Unable to reclaim tax on dividend income","Loss of shareholder perks","Anonymity"],ans:2,exp:"When shares are held in a pooled nominee, the beneficial owner may lose access to shareholder perks (discounts, AGM attendance rights) offered to registered shareholders, as the nominee appears on the register rather than the individual investor."},
+  {id:"T2Q69",q:"Positive purchased goodwill is included in which part of a group Statement of Financial Position?",opts:["Current assets","Non-current assets","Current liabilities","Non-current liabilities"],ans:1,exp:"Goodwill arising from an acquisition (purchased goodwill) is recognised as an intangible non-current asset on the consolidated balance sheet and is subject to annual impairment testing under IFRS 3."},
+  {id:"T2Q70",q:"On a Statement of Financial Position, under which heading would you expect to find pre-payments?",opts:["Fixed assets","Current assets","Reserves","Current liabilities"],ans:1,exp:"Prepayments are amounts paid in advance for goods or services not yet received (e.g., prepaid rent or insurance). They represent a future economic benefit and are classified as current assets as they are expected to be consumed within 12 months."},
+  {id:"T2Q71",q:"Following an annual review, a company\'s land assets have declined in value. How is this reflected in the Statement of Financial Position?",opts:["Amortisation is increased","Depreciation is increased","Depreciation is decreased","Revaluation reserve is decreased"],ans:3,exp:"Land that is carried at a revalued amount and has declined in value will result in a reduction of the revaluation reserve (in equity). Land is not depreciated (it has an indefinite useful life) and amortisation applies to intangibles, not land."},
+  {id:"T2Q72",q:"Turnover less the cost of sales, distribution and administration gives which income statement figure?",opts:["Profit before tax","Distributable profit","Total gross income","Operating profit"],ans:3,exp:"Operating profit (or EBIT) = Revenue − Cost of Sales − Distribution Costs − Administrative Expenses. This is the profit from ongoing trading operations before interest and tax."},
+  {id:"T2Q73",q:"Which of the following items would usually appear in an income statement?",opts:["Creditors","Fixed assets","Net cash","Turnover"],ans:3,exp:"The income statement (profit and loss account) shows revenues and expenses over a period — turnover (revenue) is the starting line. Creditors and fixed assets appear on the balance sheet; net cash appears in the cash flow statement."},
+  {id:"T2Q74",q:"Which of the following is a required heading in a cash flow statement?",opts:["Bank account summary","Taxation liabilities","Investing activities","Loan and debt statement"],ans:2,exp:"IAS 7 requires a cash flow statement to present cash flows under three headings: Operating activities, Investing activities, and Financing activities. \'Investing activities\' is the only one of the four options that matches a required heading."},
+  {id:"T2Q75",q:"Within a cash flow statement, dividends received should appear under which heading?",opts:["Income collection","Inflow cash","Investing activity","Cash generation profit"],ans:2,exp:"Under IAS 7, dividends received may be classified under either operating or investing activities. The standard treatment for most entities is to include dividends received as investing activities (returns on investments)."},
+  {id:"T2Q76",q:"What type of cash flow is the \'free cash flow to shareholders\' known as?",opts:["Equity","Dividend","Investment","Repayment"],ans:0,exp:"Free Cash Flow to Equity (FCFE) is the cash available to equity shareholders after meeting all financial obligations. It is known as the equity cash flow — the amount that could be paid as dividends or used for share buybacks."},
+  {id:"T2Q77",q:"As an alternative to using the cash flow statement to calculate free cash flow, which of the following is often used?",opts:["Statement of Financial Position","Debtors ledger and bank account balances","Income statement","Expenditure calculations"],ans:2,exp:"Free cash flow can be derived from the income statement by adjusting operating profit for non-cash items (depreciation, amortisation) and changes in working capital — this gives an approximation without requiring the full cash flow statement."},
+  {id:"T2Q78",q:"ABC Plc has announced profits attributable to ordinary shareholders of £2,000,000. ABC Plc has 10 million ordinary shares with a nominal value of 50p and a market price of £2.00. What are the earnings per share?",opts:["2½p","5p","10p","20p"],ans:3,exp:"EPS = Profit ÷ Number of shares = £2,000,000 ÷ 10,000,000 = £0.20 = 20p. The nominal value and market price are irrelevant to EPS calculation."},
+  {id:"T2Q79",q:"Which of the following is a risk of selling a bond prior to its maturity date?",opts:["The final payment will be reduced","A coupon payment may be missed","The market value could be above the nominal value","The market value could be below the nominal value"],ans:3,exp:"If interest rates have risen since a bond was purchased, its market price will have fallen below par (nominal value). Selling before maturity would realise a capital loss. This is the key price risk of selling early."},
+  {id:"T2Q80",q:"Life insurance companies generally invest for their long-term obligations in which asset class?",opts:["Equities","Fixed income","Derivatives","Futures"],ans:0,exp:"Life insurers match long-term liabilities (life and annuity policies) with long-term assets. Equities provide the long-term capital growth needed to meet these obligations, and are the largest asset class in life insurance portfolios."},
+  {id:"T2Q81",q:"Which of the following is MOST likely to establish a fund that maintains a short-term liability profile allowing very little risk and low returns?",opts:["Trustees of pension funds","Life assurance companies","Managers of collective investment schemes","General insurance companies"],ans:3,exp:"General insurance companies (home, motor, liability insurance) have short-term liabilities — claims must be paid quickly. They therefore hold predominantly short-term, low-risk liquid assets. Pension funds and life insurers have long-term liabilities."},
+  {id:"T2Q82",q:"An analysis of ABC Ltd shows its trading activities have increased by around 10% over the last 12 months. Which financial statement MOST likely provided this information?",opts:["Statement of Financial Position","Income Statement","Statement of Changes in Equity","Cash Flow Statement"],ans:1,exp:"Trading activities (i.e. revenue/turnover) are reported in the Income Statement (profit and loss account). A 10% increase in turnover would be visible by comparing income statements for the two periods."},
+  {id:"T2Q83",q:"If a Eurobond is described as immobilised, this means that it:",opts:["Cannot be sold","Has to be retained in its original currency","Is held in a depositary","Must remain in just one territory"],ans:2,exp:"Immobilisation of Eurobonds means the physical certificates are deposited with a central securities depository (such as Euroclear or Clearstream) and all subsequent transfers are made by book entry — the bonds never physically move."},
+  {id:"T2Q84",q:"What happens as a result of utilising the \'greenshoe option\' under an initial public offering?",opts:["Shares are purchased at a significant discount","More shares are issued than originally planned","Shares are issued without voting rights","Only those who bid beyond a certain price are granted shares"],ans:1,exp:"The greenshoe (over-allotment) option allows the underwriter to issue up to 15% more shares than originally planned if demand is high. This supports the share price post-IPO and provides additional capital for the company."},
+  {id:"T2Q85",q:"Why would an investor who wants capital growth invest in all major asset classes?",opts:["The classes tend to operate on a strong positive correlation basis","Each class has different risk/reward characteristics","The classes are all linked to a common index","Each class can accommodate a full range of investment terms"],ans:1,exp:"Different asset classes (equities, bonds, property, alternatives) have different risk/return profiles and low or negative correlations with each other. Diversifying across them reduces overall portfolio risk while maintaining return potential."},
+  {id:"T2Q86",q:"Why might a company decide to launch a scrip issue?",opts:["To launch a takeover bid","To raise extra capital","To obtain a stock market listing","To reduce the share price"],ans:3,exp:"A scrip (bonus) issue increases the number of shares in issue proportionately, reducing the share price accordingly. Companies do this when the share price has risen so high it may deter smaller investors or impair marketability."},
+  {id:"T2Q87",q:"Where a trade involves shares which are \'dematerialised\', this means that:",opts:["The shareholders\' register will be unaffected","The settlement period will be less than the standard duration","The transaction will be settled electronically","The need for a central counterparty will be avoided"],ans:2,exp:"Dematerialisation means securities exist only as electronic records — there are no physical certificates. Settlement occurs through electronic book-entry transfer, updating the register electronically. The register is still updated; CCPs may still be used."},
+  {id:"T2Q88",q:"When listing new shares, why might a company choose to appoint an underwriter?",opts:["To ensure the shares are widely marketed","To prevent the shares being sold on too quickly","To ensure that all the shares are sold","To prevent a fall in the share price"],ans:2,exp:"An underwriter guarantees to purchase any shares not taken up by investors, ensuring the issuer receives the full amount of capital sought regardless of market conditions. This eliminates the risk of a partially subscribed issue."},
+  {id:"T2Q89",q:"Securities firm X is responding to recent market movements through high-frequency trading, rather than placing conventional orders like firm Y. Compared to firm Y, firm X is looking to benefit by dealing:",opts:["More quickly","A large quantity of stock in a single order","At lower costs","Across wider markets"],ans:0,exp:"High-frequency trading (HFT) uses algorithms and co-location to execute orders in microseconds — far faster than human traders or conventional order systems. Speed is the core advantage, enabling the firm to react to price movements before competitors."},
+  {id:"T2Q90",q:"Company X is listed on an overseas stock exchange and is seeking an introduction to become listed on the LSE. If successful, Company X is MOST likely to benefit from:",opts:["Immediate access to the primary market of the LSE","Extra liquidity in its shares","Capital raised through the additional share issue","Increased flexibility available under the greenshoe option"],ans:1,exp:"An introduction to the LSE does not raise new capital — no new shares are issued. The key benefit is increased liquidity, as the company\'s shares become accessible to a wider pool of UK investors on a major exchange."},
+  {id:"T2Q91",q:"Which of the following characteristics is most often associated with the secondary market?",opts:["The market where companies make their initial public offering","The market where companies can make offers for subscriptions","The market where listed securities are freely transacted","The market where companies are able to raise capital"],ans:2,exp:"The secondary market is where existing securities are bought and sold between investors — companies do not receive any proceeds. The primary market is where new securities are issued and capital is raised."},
+  {id:"T2Q92",q:"A company sells its shares to an investment bank, which subsequently sells those shares to investors at a premium to the price they paid. This is known as:",opts:["An invitation to subscribe","An offer for sale","A Dutch auction","A premium listing"],ans:1,exp:"An offer for sale is where an issuing company sells shares to an investment bank (intermediary), which then sells them on to the public at a higher price, retaining the spread. The company receives the proceeds from the initial bank sale."},
+  {id:"T2Q93",q:"A key benefit of an investor purchasing residential properties for investment purposes is:",opts:["That 40% of the income received will usually be tax free","Long-term rental contracts of 10 years or more guarantee a steady income stream","The tenant will be responsible for any repairs and maintenance","A wide range of property types are available, which can lead to a diversified portfolio"],ans:3,exp:"Direct residential property investment offers diversification through a wide range of locations, property types, and tenant profiles. Rental income is generally fully taxable; long leases are commercial not residential; landlords bear maintenance costs."},
+  {id:"T2Q94",q:"What is a key benefit of purchasing shares in an investment trust compared to a comparable unit trust?",opts:["Lower stamp duty reserve tax costs","Improved liquidity and tradability","Potential to invest at a discount to net asset value","Clarity of a single price to buy and sell"],ans:2,exp:"Investment trusts are closed-ended listed companies whose shares can trade at a discount or premium to NAV. Buying at a discount means acquiring assets for less than their value — a key potential benefit over open-ended unit trusts which always trade at NAV."},
+  {id:"T2Q95",q:"If the GBP/USD spot rate is 1.4200 and the annual interest rate is 2.2% in the US and 3.1% in the UK, what would be the one year forward rate?",opts:["1.4076","1.4152","1.4325","1.4512"],ans:0,exp:"Using Interest Rate Parity: Forward = Spot × (1 + US rate) / (1 + UK rate) = 1.4200 × (1.022) / (1.031) = 1.4200 × 0.99127 = 1.4076. The USD appreciates (GBP depreciates) as UK rates are higher."},
+  {id:"T2Q96",q:"Which of the following risks could increase as a consequence of high frequency trading?",opts:["Credit","Liquidity","Counterparty","Systemic"],ans:3,exp:"HFT can increase systemic risk — the risk of widespread market disruption affecting the entire financial system. Flash crashes (like May 2010) demonstrate how HFT algorithms can amplify price movements and reduce market stability at speed."},
+  {id:"T2Q97",q:"What purpose does securities lending generally serve?",opts:["Provides liquidity to the market","Provides introductions to lenders that would otherwise be difficult to make","Serves to lend stock to companies requiring finance","Generates income for companies requiring finance"],ans:0,exp:"Securities lending improves market liquidity by enabling short sellers to borrow stock and fulfil delivery obligations. Without securities lending, short selling would be impractical, reducing liquidity and price discovery in equity markets."},
+  {id:"T2Q98",q:"A key issue facing investors who wish to invest in deposits based overseas is that they:",opts:["Will suffer higher levels of taxation","Will usually be offered lower interest rates compared with UK rates","Will always be covered by the FSCS deposit insurance","May be subject to exchange controls when repatriating the money"],ans:3,exp:"Many countries impose exchange controls that restrict the transfer of money across borders. Investors in overseas deposits may find it difficult or impossible to repatriate their capital and interest. Overseas deposits are not covered by the FSCS."},
+  {id:"T2Q99",q:"What is the purpose of the law, employed in some jurisdictions, whereby securities lending and borrowing is often mandatory?",opts:["To ensure short sellers pre-borrow the stock to be sold so settlement is timely","To avoid unsettled sales clogging up the settlement process, leading to illiquidity","To provide better audit trails and record keeping for Hedge Funds","To deter short sellers from making gains in falling markets"],ans:0,exp:"Some jurisdictions require short sellers to pre-borrow securities before selling to ensure they can deliver on settlement date. This prevents \'naked\' short selling, which can cause settlement failures and market disruption."},
+  {id:"T2Q100",q:"Which of the following is regarded as a purpose of including a stakeholder review within an annual report?",opts:["It can provide information that may be of interest for investors wanting to engage in socially responsible investing","It provides an overview of the strategy that the company has adopted","It allows the CFO to summarise the company performance based on a whole range of different metrics","It outlines how the company runs its business, including commentary from an Independent Non-executive Director"],ans:0,exp:"The stakeholder review section of an annual report covers the company\'s relationships with employees, customers, communities, and environment. This information is particularly relevant to ESG/SRI investors interested in the social and ethical dimensions of investing."}
+];
+
+/* ── TIMER ──────────────────────────────────────── */
+let timerSecs = 90 * 60;
+let timerRunning = false;
+let timerInterval = null;
+
+function timerTick(){
+  if(timerSecs <= 0){ clearInterval(timerInterval); timerRunning=false; updateTimerDisplay(); return; }
+  timerSecs--;
+  updateTimerDisplay();
+}
+
+function updateTimerDisplay(){
+  const m = Math.floor(timerSecs/60);
+  const s = timerSecs % 60;
+  const el = document.getElementById('timer-display');
+  if(!el) return;
+  el.textContent = String(m).padStart(2,'0') + ':' + String(s).padStart(2,'0');
+  el.className = 'timer-display';
+  if(timerSecs <= 3*60) el.classList.add('timer-red');
+  else if(timerSecs <= 10*60) el.classList.add('timer-yellow');
+  else el.classList.add('timer-green');
+}
+
+function timerStart(){
+  if(timerRunning || timerSecs<=0) return;
+  timerRunning = true;
+  timerInterval = setInterval(timerTick, 1000);
+}
+
+function timerPause(){
+  if(!timerRunning) return;
+  timerRunning = false;
+  clearInterval(timerInterval);
+}
+
+function timerStop(){
+  timerRunning = false;
+  clearInterval(timerInterval);
+}
+
+function timerReset(){
+  timerRunning = false;
+  clearInterval(timerInterval);
+  timerSecs = 90 * 60;
+  updateTimerDisplay();
+}
+
+/* ── STATE ──────────────────────────────────────── */
+let order = [];       // shuffled indices into QS
+let curr = 0;
+let answered = [];    // null | selected-index
+let score = 0;
+let done = false;
+let wrongMode = false;
+let wrongBank = new Set(); // QS indices of wrong answers
+let wrongOrder = [];
+let wrongAnswered = [];
+let wrongCurr = 0;
+let wrongDone = false;
+let activeTestMode = 't1'; // t1 | t2 | all
+
+/* ── PERSISTENCE ─────────────────────────────────────── */
+const SAVE_KEY = 'cisi_securities_save_v2';
+
+function saveState(){
+  try {
+    const state = {
+      activeTestMode,
+      order,
+      curr,
+      answered,
+      score,
+      done,
+      wrongBank: [...wrongBank],
+      wrongMode,
+      wrongOrder,
+      wrongAnswered,
+      wrongCurr,
+      wrongDone,
+      timerSecs,
+      timerRunning: false // never save as running
+    };
+    localStorage.setItem(SAVE_KEY, JSON.stringify(state));
+    // Show toast
+    const toast = document.getElementById('save-toast');
+    if(toast){
+      toast.classList.add('show');
+      clearTimeout(toast._t);
+      toast._t = setTimeout(()=>toast.classList.remove('show'), 1500);
+    }
+  } catch(e){ /* localStorage may be unavailable */ }
+}
+
+function loadState(){
+  try {
+    const raw = localStorage.getItem(SAVE_KEY);
+    if(!raw) return false;
+    const s = JSON.parse(raw);
+    activeTestMode  = s.activeTestMode  || 't1';
+    order           = s.order           || [];
+    curr            = s.curr            || 0;
+    answered        = s.answered        || [];
+    score           = s.score           || 0;
+    done            = s.done            || false;
+    wrongBank       = new Set(s.wrongBank || []);
+    wrongMode       = s.wrongMode       || false;
+    wrongOrder      = s.wrongOrder      || [];
+    wrongAnswered   = s.wrongAnswered   || [];
+    wrongCurr       = s.wrongCurr       || 0;
+    wrongDone       = s.wrongDone       || false;
+    timerSecs       = (s.timerSecs !== undefined) ? s.timerSecs : 90*60;
+    return true;
+  } catch(e){ return false; }
+}
+
+function clearSave(){
+  try { localStorage.removeItem(SAVE_KEY); } catch(e){}
+}
+
+function switchTest(mode){
+  activeTestMode = mode;
+  wrongBank.clear();
+  wrongMode = false;
+  wrongAnswered = [];
+  wrongOrder = [];
+  clearSave();
+  document.getElementById('wrong-mode-btn').classList.remove('active-mode');
+  document.querySelectorAll('.test-tab').forEach(el=>el.classList.remove('active'));
+  const el = document.getElementById('tab-'+mode);
+  if(el) el.classList.add('active');
+  startOver();
+}
+
+function shuffle(arr){
+  const a=[...arr];
+  for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}
+  return a;
+}
+
+function startOver(){
+  const bank = getActiveBank();
+  order = shuffle([...Array(bank.length).keys()]);
+  curr = 0;
+  answered = new Array(bank.length).fill(null);
+  score = 0;
+  done = false;
+  wrongMode = false;
+  document.getElementById('wrong-mode-btn').classList.remove('active-mode');
+  saveState();
+  render();
+}
+
+function getActiveBank(){
+  if(activeTestMode==='t2') return QS2;
+  if(activeTestMode==='all') return [...QS,...QS2];
+  return QS; // t1 default
+}
+
+function toggleWrongMode(){
+  if(wrongBank.size === 0){
+    wrongMode = false;
+    document.getElementById('wrong-mode-btn').classList.remove('active-mode');
+    render();
+    return;
+  }
+  wrongMode = !wrongMode;
+  document.getElementById('wrong-mode-btn').classList.toggle('active-mode', wrongMode);
+  if(wrongMode) startWrongDrill();
+  else render();
+}
+
+function startWrongDrill(){
+  wrongOrder = shuffle([...wrongBank]);
+  wrongAnswered = new Array(wrongOrder.length).fill(null);
+  wrongCurr = 0;
+  wrongDone = false;
+  saveState();
+  render();
+}
+
+function clearWrongBank(){
+  wrongBank.clear();
+  wrongMode = false;
+  wrongOrder = [];
+  wrongAnswered = [];
+  wrongCurr = 0;
+  wrongDone = false;
+  document.getElementById('wrong-mode-btn').classList.remove('active-mode');
+  saveState();
+  render();
+}
+
+/* ── HELPERS ────────────────────────────────────── */
+function pct(sc, total){ return total===0 ? 0 : Math.round(sc/total*100); }
+function pctCls(p){ return p>=70?'good':p>=50?'mid':'low'; }
+
+function getAnswered(){ return wrongMode ? wrongAnswered : answered; }
+function getCurr(){ return wrongMode ? wrongCurr : curr; }
+function getOrder(){ return wrongMode ? wrongOrder : order; }
+function getTotal(){ return wrongMode ? wrongOrder.length : getActiveBank().length; }
+function getDone(){ return wrongMode ? wrongDone : done; }
+
+function getScore(){
+  if(wrongMode){
+    return wrongAnswered.filter((a,i)=> a!==null && a===QS[wrongOrder[i]].ans).length;
+  }
+  return score;
+}
+
+/* ── RENDER ─────────────────────────────────────── */
+function renderWrongBankPanel(){
+  if(wrongBank.size === 0 || wrongMode) return '';
+  return `<div class="wrong-bank-panel">
+    <div class="wbp-hdr">
+      <span>&#128293;</span>
+      <span class="wbp-title">Wrong Answer Bank</span>
+      <span class="wbp-count">${wrongBank.size}</span>
+    </div>
+    <div class="wbp-note">Questions you answered incorrectly. Drill them until you get them all right.</div>
+    <div class="wbp-btns">
+      <button class="wbp-drill" onclick="startWrongDrill();wrongMode=true;document.getElementById('wrong-mode-btn').classList.add('active-mode');render()">&#9654; Start Drill (${wrongBank.size} Qs)</button>
+      <button class="wbp-clear" onclick="clearWrongBank()">&#128465; Empty Bank</button>
+    </div>
+  </div>`;
+}
+
+function renderTracker(){
+  const ans = getAnswered();
+  const ord = getOrder();
+  const c = getCurr();
+  const isDone = getDone();
+  return ord.map((qi,i)=>{
+    let cls='dot-unseen';
+    const a = ans[i];
+    if(a!==null){ cls = a===getActiveBank()[qi].ans ? 'dot-correct' : 'dot-wrong'; }
+    const active = i===c && !isDone ? ' dot-active' : '';
+    return `<div class="tracker-dot ${cls}${active}" title="Q${i+1}" onclick="goTo(${i})"></div>`;
+  }).join('');
+}
+
+function renderScoreBar(){
+  const answeredCount = getAnswered().filter(x=>x!==null).length;
+  const sc = getScore();
+  const p = pct(sc, answeredCount);
+  const total = getTotal();
+  return `<div class="score-bar">
+    <div class="sc"><span class="n">${sc}</span><span class="d">/ ${answeredCount} ans</span></div>
+    <span class="sc-sep">·</span>
+    <span class="sc-pct ${pctCls(p)}">${p}%</span>
+    <div class="sc-bar-wrap"><div class="sc-bar-fill" style="width:${p}%"></div></div>
+    <div class="sc" style="margin-left:auto"><span class="n">${total - answeredCount}</span><span class="d">left</span></div>
+  </div>`;
+}
+
+function renderQuestion(){
+  const c = getCurr();
+  const ord = getOrder();
+  const ans = getAnswered();
+  const total = getTotal();
+  const qi = ord[c];
+  const q = getActiveBank()[qi];
+  const selected = ans[c]; // null or index
+  const isAnswered = selected !== null;
+
+  const optsHTML = q.opts.map((o,i)=>{
+    let cls = '';
+    if(isAnswered){
+      if(i === q.ans) cls = 'ok';
+      else if(i === selected) cls = 'bad';
+      else cls = 'disabled';
+    }
+    const click = isAnswered ? '' : `onclick="pick(${i})"`;
+    return `<div class="opt ${cls}" ${click}>
+      <div class="opt-l">${'ABCD'[i]}</div>
+      <div class="opt-text">${o}</div>
+    </div>`;
+  }).join('');
+
+  let expHTML = '';
+  if(isAnswered){
+    const correct = selected === q.ans;
+    const cls = correct ? 'exp-box show exp-ok' : 'exp-box show exp-bad';
+    const icon = correct ? '✓ Correct' : '✗ Incorrect';
+    expHTML = `<div class="${cls}"><strong>${icon}.</strong> ${q.exp}</div>`;
+  }
+
+  const bankName = activeTestMode==='t2'?'Test 2':activeTestMode==='all'?'All Tests':'Test 1';
+  const modeLabel = wrongMode
+    ? `<div class="round-pill wrong-pill">&#128293; Wrong Bank · Q${c+1} of ${total}</div>`
+    : `<div class="round-pill">Q${c+1} of ${total} <span style="opacity:.6;margin-left:4px">· ${bankName}</span></div>`;
+
+  const showNext = isAnswered && c < total - 1;
+  const showResult = isAnswered && c === total - 1 && !getDone();
+
+  return `<div class="round-info">
+    ${modeLabel}
+    <div class="progress-pill">Score <span class="prog-nums">${getScore()}/${getAnswered().filter(x=>x!==null).length}</span> <span style="opacity:.6;font-size:.6rem">${pct(getScore(),getAnswered().filter(x=>x!==null).length)}%</span></div>
+  </div>
+  <div class="tracker">${renderTracker()}</div>
+  ${renderScoreBar()}
+  <div class="q-card">
+    <div class="q-label">Question ${c+1} · ${q.id}</div>
+    <div class="q-text">${q.q}</div>
+    <div class="opts">${optsHTML}</div>
+    ${expHTML}
+  </div>
+  <div class="nav-row">
+    ${c > 0 ? `<button class="btn btn-sec" onclick="prev()">← Previous</button>` : ''}
+    ${showNext ? `<button class="btn btn-p" onclick="next()">Next →</button>` : ''}
+    ${showResult ? `<button class="btn btn-p" onclick="finishRound()">See Results →</button>` : ''}
+    ${wrongMode ? `<button class="btn btn-sec" onclick="wrongMode=false;document.getElementById('wrong-mode-btn').classList.remove('active-mode');render()">← Back to Main</button>` : ''}
+    ${wrongMode ? `<button class="btn" style="background:#ede9fe;color:#5b21b6;border:1.5px solid #c4b5fd;" onclick="clearWrongBank()">&#128465; Empty Bank</button>` : ''}
+  </div>`;
+}
+
+function renderResult(){
+  const sc = getScore();
+  const total = getTotal();
+  const p = pct(sc, total);
+  let grade, gradeStyle;
+  if(p>=80){grade='Excellent';gradeStyle='background:#d1fae5;color:#065f46';}
+  else if(p>=70){grade='Good Pass';gradeStyle='background:var(--teal-l);color:var(--teal-d)';}
+  else if(p>=60){grade='Borderline';gradeStyle='background:var(--amber-l);color:var(--amber)';}
+  else{grade='Needs Work';gradeStyle='background:#fee2e2;color:#991b1b';}
+  const barCol = p>=70?'#059669':p>=50?'#d97706':'#dc2626';
+  const wrong2 = getAnswered().filter((a,i)=>a!==null && a!==getActiveBank()[getOrder()[i]].ans).length;
+  const correct2 = getAnswered().filter((a,i)=>a!==null && a===getActiveBank()[getOrder()[i]].ans).length;
+  const isWrong = wrongMode;
+
+  return `<div class="result-card">
+    <div style="font-size:.72rem;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.08em;margin-bottom:.4rem">${isWrong?'Wrong Bank Drill — Result':'Final Result'}</div>
+    <div class="result-big" style="color:var(--navy)">${sc} / ${total}</div>
+    <div class="result-grade" style="${gradeStyle}">${grade}</div>
+    <div class="result-bar-wrap"><div class="result-bar-fill" style="width:${p}%;background:${barCol}"></div></div>
+    <div class="result-breakdown">
+      <span class="rp" style="background:#d1fae5;color:#065f46">✓ ${correct2} correct</span>
+      <span class="rp" style="background:#fee2e2;color:#991b1b">✗ ${wrong2} wrong</span>
+      <span class="rp" style="background:var(--gray-l);color:var(--gray-d)">${p}%</span>
+    </div>
+    <div style="font-size:.78rem;color:var(--text2);margin-bottom:1rem">${isWrong?'Wrong Bank Drill':'Securities & Markets · 50 questions'}</div>
+    <div style="display:flex;gap:.5rem;justify-content:center;flex-wrap:wrap">
+      ${isWrong ? `<button class="btn btn-wrong" onclick="startWrongDrill();render()">&#8634; Retry Wrong Bank</button>` : ''}
+      <button class="btn btn-p" onclick="startOver()">&#8634; New Round (all 50)</button>
+      ${!isWrong && wrongBank.size>0 ? `<button class="btn btn-wrong" onclick="wrongMode=true;document.getElementById('wrong-mode-btn').classList.add('active-mode');startWrongDrill();render()">&#128293; Drill ${wrongBank.size} Wrong</button>` : ''}
+    </div>
+  </div>`;
+}
+
+function render(){
+  const el = document.getElementById('app-content');
+  el.innerHTML = renderWrongBankPanel() + (getDone() ? renderResult() : renderQuestion());
+}
+
+/* ── ACTIONS ────────────────────────────────────── */
+function pick(i){
+  if(wrongMode){
+    if(wrongAnswered[wrongCurr] !== null) return;
+    const qi = wrongOrder[wrongCurr];
+    const q = getActiveBank()[qi];
+    wrongAnswered[wrongCurr] = i;
+    // if correct in drill, remove from bank
+    if(i === q.ans) wrongBank.delete(qi); // qi is index into active bank
+    saveState();
+    render();
+  } else {
+    if(answered[curr] !== null) return;
+    const qi = order[curr];
+    const q = getActiveBank()[qi];
+    answered[curr] = i;
+    if(i === q.ans){ score++; }
+    else { wrongBank.add(qi); }
+    saveState();
+    render();
+  }
+}
+
+function next(){
+  if(wrongMode){ if(wrongCurr < wrongOrder.length-1){ wrongCurr++; saveState(); render(); } }
+  else { if(curr < getActiveBank().length-1){ curr++; saveState(); render(); } }
+}
+
+function prev(){
+  if(wrongMode){ if(wrongCurr > 0){ wrongCurr--; saveState(); render(); } }
+  else { if(curr > 0){ curr--; saveState(); render(); } }
+}
+
+function goTo(i){
+  if(getDone()) return;
+  if(wrongMode) wrongCurr = i;
+  else curr = i;
+  saveState();
+  render();
+}
+
+function finishRound(){
+  if(wrongMode) wrongDone = true;
+  else done = true;
+  saveState();
+  render();
+}
+
+/* ── INIT ───────────────────────────────────────── */
+(function(){
+  const loaded = loadState();
+  if(loaded && order.length > 0){
+    // Restore tab UI
+    document.querySelectorAll('.test-tab').forEach(el=>el.classList.remove('active'));
+    const tabEl = document.getElementById('tab-'+activeTestMode);
+    if(tabEl) tabEl.classList.add('active');
+    if(wrongMode){
+      document.getElementById('wrong-mode-btn').classList.add('active-mode');
+    }
+  } else {
+    startOver();
+  }
+  updateTimerDisplay();
+  render();
+})();
+</script>
+<div class="save-toast" id="save-toast">✓ Progress saved</div>
+</body>
+</html>
